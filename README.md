@@ -12,13 +12,49 @@ $ git clone git@github.com:UsoltsevI/Cache.git
 The [tests](/tests) folder contatins testing program for hashtable and for linked list. Also, there are may be some folders with testing data. 
 
 The section will be finalized later...
-### Cache functions:
+
+### Cache:
+Included files:
+* <stdio.h>
+* <stdlib.h>
+* ["/include/list.h"](/include/list.h)
+* ["/include/hash.h"](/include/hash.h)
+* ["/include/cache.h"](/include/cache.h)
+
+Files for joint linking:
+* [/source/list.c](/source/list.c)
+* [/source/hash.c](/source/hash.c)
+
+Structures:
 ```
-// adds value to cache and returns 1 if hit, 0 if miss
-int cache(struct table* tbl, int value) 
+struct cache;
 ```
 
-### List functions:
+Functions:
+```
+// creates cache with specified size and returns link to it
+struct cache* create_cache(size_t size);
+
+// This function adds the value to cache 
+// and returns 1 if hit, 0 if miss
+int cache(struct cache* cch, int value);
+
+void delete_cache(struct cache* cch);
+```
+
+### List:
+Included files:
+* <stdio.h>
+* <stdlib.h>
+* ["/include/list.h"](/include/list.h)
+
+Structures:
+```
+struct node;
+struct list;
+```
+
+Functions:
 ```
 // creates list with specified size and returns link to it
 struct list* create_list(size_t number_of_elements);
@@ -35,7 +71,22 @@ struct node* get_head(struct list* lst);
 void delete_list(struct list* lst);
 ```
 
-### Hashmap functions:
+### Hashmap:
+Included files:
+* <stdio.h>
+* <stdlib.h>
+* ["/include/list.h"](/include/list.h)
+* ["/include/hash.h"](/include/hash.h)
+
+Files for joint linking:
+* [/source/list.c](/source/list.c)
+
+Structures:
+```
+struct table;
+```
+
+Functions:
 ```
 // creates a list with specified size and returns the link to it
 struct table* create_table(size_t size);
