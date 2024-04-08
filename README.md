@@ -1,40 +1,57 @@
 # Cache project
 
 ## Brief description:
-The section will be added later...
+This is a school project to implement cache functions. In the last implementation it uses [a doubly linked lsit](https://en.wikipedia.org/wiki/Doubly_linked_list) and a hash table with a separate chaining collision resolution (see [hash table](https://en.wikipedia.org/wiki/Hash_table)).
 
 ## Usage 
 To install this repository tap in your console:
 ```
 $ git clone git@github.com:UsoltsevI/Cache.git
 ```
-The section will be added later...
 
+The [tests](/tests) folder contatins testing program for hashtable and for linked list. Also, there are may be some folders with testing data. 
+
+The section will be finalized later...
 ### Cache functions:
 ```
-int cache(struct table* tbl, int value) // adds value to cache and returns 1 if hit, 0 if miss
+// adds value to cache and returns 1 if hit, 0 if miss
+int cache(struct table* tbl, int value) 
 ```
 
 ### List functions:
 ```
-struct list* create_list(size_t number_of_elements) // creates list with specified size and returns link to it
+// creates list with specified size and returns link to it
+struct list* create_list(size_t number_of_elements);
 
-void move_to_head(struct list* lst, struct node* nd) // move node from it's porition to list's head
+// move node from it's porition to list's head
+void move_to_head(struct list* lst, struct node* nd);
 
-struct node* add_to_head(int value) // adds value to list's head and returns link to head
+// adds value to list's head and returns link to head
+struct node* add_to_head(struct list* lst, int value);
 
-struct node* get_head(struct list* list) // returns link to head
+// returns link to head
+struct node* get_head(struct list* lst);
 
-void delete_list(struct list* list)
+void delete_list(struct list* lst);
 ```
 
 ### Hashmap functions:
 ```
-struct table* create_table(size_t size) // creates list with specified size and returns link to it
+// creates a list with specified size and returns the link to it
+struct table* create_table(size_t size);
 
-void add_value(struct table* table, int value, struct node* nd) // adds node with value (key == value)
+// adds node with value (key == value)
+void add_value(struct table* tbl, int value, struct node* nd);
 
-void delete_table(struct table* table)
+// removes the cell (from local linked list)
+// with value == value,
+// but not removes the public linked list's node.
+// returns link to removed node (belonging to public linked list, 
+// not to local linked list), 
+// and NULL if there is no cell with such value
+struct node* delete_cell(struct table* tbl, int value);
+
+void delete_table(struct table* tbl);
 ```
 
 ## Useful links:
