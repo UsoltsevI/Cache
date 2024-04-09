@@ -24,6 +24,10 @@ Included files:
 Files for joint linking:
 * [/source/list.c](/source/list.c)
 * [/source/hash.c](/source/hash.c)
+Typedefs:
+```
+typedef int CacheValueType;
+```
 
 Structures:
 ```
@@ -37,7 +41,7 @@ struct cache* create_cache(size_t size);
 
 // This function adds the value to cache 
 // and returns 1 if hit, 0 if miss
-int cache(struct cache* cch, int value);
+int cache(struct cache* cch, CacheValueType value);
 
 void delete_cache(struct cache* cch);
 ```
@@ -47,6 +51,11 @@ Included files:
 * <stdio.h>
 * <stdlib.h>
 * ["/include/list.h"](/include/list.h)
+
+Typedefs:
+```
+typedef int ListValueType;
+```
 
 Structures:
 ```
@@ -63,7 +72,7 @@ struct list* create_list(size_t number_of_elements);
 void move_to_head(struct list* lst, struct node* nd);
 
 // adds value to list's head and returns link to head
-struct node* add_to_head(struct list* lst, int value);
+struct node* add_to_head(struct list* lst, ListValueType value);
 
 // returns link to head
 struct node* get_head(struct list* lst);
@@ -81,6 +90,11 @@ Included files:
 Files for joint linking:
 * [/source/list.c](/source/list.c)
 
+Typedefs:
+```
+typedef int HashValueType;
+```
+
 Structures:
 ```
 struct table;
@@ -92,7 +106,7 @@ Functions:
 struct table* create_table(size_t size);
 
 // adds node with value (key == value)
-void add_value(struct table* tbl, int value, struct node* nd);
+void add_value(struct table* tbl, HashValueType value, struct node* nd);
 
 // removes the cell (from local linked list)
 // with value == value,
@@ -100,7 +114,7 @@ void add_value(struct table* tbl, int value, struct node* nd);
 // returns link to removed node (belonging to public linked list, 
 // not to local linked list), 
 // and NULL if there is no cell with such value
-struct node* delete_cell(struct table* tbl, int value);
+struct node* delete_cell(struct table* tbl, HashValueType value);
 
 void delete_table(struct table* tbl);
 ```
