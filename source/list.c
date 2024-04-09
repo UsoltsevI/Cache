@@ -1,26 +1,19 @@
-#include "..\include\list.h"
 #include "stdio.h"
+#include "stdlib.h"ù
 
-// int main ()
-// {
-//     List* list =  create_list(5);
-//     list_dump(list);
-    
-//     for (int i = 0; i < 8; i++)
-//     {
-//         add_to_list(list, i);
-//         list_dump(list);
-//     }
+struct node 
+{
+    struct node* next;
+    struct node* prev; 
+    size_t val;
+};
 
-//     move_to_head(list, 3);
-//     list_dump(list);
-
-//     for (int i = 8; i < 15; i++)
-//     {
-//         add_to_list(list, i);
-//         list_dump(list);
-//     }
-// }
+struct list 
+{
+    struct node* head;
+    struct node* tail;
+    size_t size;
+};
 
 List* create_list (size_t number_of_elements)
 {
@@ -120,10 +113,10 @@ Node* add_to_list(List* list, int val)
     return list_temp;
 }
 
-// Node* get_head (List* list)
-// {
-
-// }
+Node* get_head (List* list)
+{
+    return list->head;
+}
 
 void list_dump (List* list)
 {
