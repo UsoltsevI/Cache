@@ -19,7 +19,7 @@ struct cache* create_cache(size_t size) {
     return cch;
 }
 
-int cache(struct cache* cch, int value) {
+int cache(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     // There is no need to do anything if 
