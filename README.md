@@ -9,7 +9,7 @@ To install this repository tap in your console:
 $ git clone git@github.com:UsoltsevI/Cache.git
 ```
 
-The [tests](/tests) folder contatins testing program for hashtable and for linked list. Also, there are may be some folders with testing data. 
+The [tests](/tests) folder contatins testing programs for hashtable and for linked list. Also, there are may be some folders with testing data. 
 
 The section will be finalized later...
 
@@ -110,6 +110,7 @@ void delete_table(struct table* tbl);
 * [Hash table](https://en.wikipedia.org/wiki/Hash_table)
 * [Linked list](https://en.wikipedia.org/wiki/Linked_list)
 * [Cache_(computing)](https://en.wikipedia.org/wiki/Cache_(computing))
+* [Full Stack Development](https://roadmap.sh/full-stack)
 * [How to write README.md](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 In Russian:
