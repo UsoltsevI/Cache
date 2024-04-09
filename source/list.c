@@ -1,5 +1,7 @@
 #include "stdio.h"
-#include "stdlib.h"ù
+#include "stdlib.h"
+
+#include "../include/list.h"
 
 struct node 
 {
@@ -14,6 +16,7 @@ struct list
     struct node* tail;
     size_t size;
 };
+
 
 List* create_list (size_t number_of_elements)
 {
