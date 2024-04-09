@@ -158,3 +158,27 @@ static void delete_last(t_list* list)
 }
 
 
+//int main()
+//{
+//    table* tb = NULL;
+//    node* cur = NULL;
+//
+//    tb = create_table(10);
+//
+//    tb->list.head->value = 0;
+//    cur = tb->list.head;
+//    add_value(tb, cur);
+//
+//    for(int i = 1; i < 5; i++)
+//    {
+//        cur = cur->next;
+//        cur->value = i;
+//        add_value(tb, cur);
+//    }
+//
+//    print_table(tb);
+//
+//    delete_table(tb);
+//
+//}
+//
