@@ -11,8 +11,11 @@ int main ()
         list_dump(list);
     }
 
-    move_to_head(list, 3);
-    list_dump(list);
+    // list
+    // // Node* new_head = list.head;
+
+    // move_to_head(list, 3);
+    // list_dump(list);
 
     for (int i = 8; i < 15; i++)
     {

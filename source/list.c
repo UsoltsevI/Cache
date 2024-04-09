@@ -55,21 +55,8 @@ void delete_list (List* list)
     free(list);
 }
 
-void move_to_head (List* list, int val)
+void move_to_head (List* list, Node* new_head)
 {
-    Node* list_temp = list->head;
-    Node* new_head = NULL;
-
-    for (int i = 0; i < list->size; i++)
-    {
-        if (list_temp->val == val)
-        {
-            new_head = list_temp;
-            break;
-        }
-        list_temp = list_temp->next;
-    }
-
     if (new_head == NULL)
         return;
     
@@ -78,8 +65,8 @@ void move_to_head (List* list, int val)
     
     if (new_head == list->tail)
     {
-        list->head = list_temp;
-        list->tail = list_temp->prev;
+        list->head = new_head;
+        list->tail = new_head->prev;
         return;
     }
 
