@@ -29,7 +29,7 @@ int cache(struct cache* cch, CacheValueType value) {
     }
 
     // removes cell from table
-    nd = delete_cell(cch->tbl, value);
+    nd = search_cell(cch->tbl, value);
     
     // if the sutable cell has been founded
     // just move it to the head
@@ -39,9 +39,13 @@ int cache(struct cache* cch, CacheValueType value) {
     }
 
     // if there is no such cell in the table
-    // just adding this value to the list's head
+    // delete tail from table
+    delete_cell(cch->tbl, get_value(get_tail(cch->lst)));
+    // Then, adding this value to the list's head
     // (the tail removes automatically, see the list's implementation)
     add_to_head(cch->lst, value);
+    // and, finally, adds this node to hashmap
+    add_value(cch->tbl, value, get_head(cch->lst));
 
     return 0;
 }

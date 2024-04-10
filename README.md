@@ -24,6 +24,7 @@ Included files:
 Files for joint linking:
 * [/source/list.c](/source/list.c)
 * [/source/hash.c](/source/hash.c)
+
 Typedefs:
 ```
 typedef int CacheValueType;
@@ -77,6 +78,12 @@ struct node* add_to_head(struct list* lst, ListValueType value);
 // returns link to head
 struct node* get_head(struct list* lst);
 
+// returns link to tail
+struct node* get_tail(struct list* lst);
+
+// returns value from node
+ListValueType get_value(struct node* nd);
+
 void delete_list(struct list* lst);
 ```
 
@@ -92,7 +99,8 @@ Files for joint linking:
 
 Typedefs:
 ```
-typedef int HashValueType;
+typedef struct node* HashValueType;
+typedef int HashKeyType;
 ```
 
 Structures:
@@ -106,7 +114,11 @@ Functions:
 struct table* create_table(size_t size);
 
 // adds node with value (key == value)
-void add_value(struct table* tbl, HashValueType value, struct node* nd);
+void add_value(struct table* tbl, HashValueType value, HashKeyType key);
+
+// returns link to node if it is founded
+// returns NULL if not founded
+struct node* search_cell(struct table* tbl, HashKeyType key);
 
 // removes the cell (from local linked list)
 // with value == value,
@@ -114,7 +126,7 @@ void add_value(struct table* tbl, HashValueType value, struct node* nd);
 // returns link to removed node (belonging to public linked list, 
 // not to local linked list), 
 // and NULL if there is no cell with such value
-struct node* delete_cell(struct table* tbl, HashValueType value);
+struct node* delete_cell(struct table* tbl, HashKeyType key);
 
 void delete_table(struct table* tbl);
 ```
