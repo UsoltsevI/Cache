@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
+#include "../include/hash.h"
 
 static size_t get_hash(node* node, table* table);
 
 static void print_table(const table* tbl);
-static void print_list(const t_list* lst);
+
+static void print_list(t_list* lst);
 
 static void delete_last(t_list* list);
+
 static void push_node(t_list* list, node* node);
 
 struct node
@@ -26,46 +29,86 @@ struct t_list
 struct table
 {
     node** cells;
-    t_list list;
+    t_list* list;
     int size;
 };
 
+int main()
+{
+    printf("govno ");
+
+    table* tb = NULL;
+    node* cur = NULL;
+
+    printf("0 ");
+
+    tb = create_table(10);
+
+    printf("1 ");
+
+//     tb->list.head->value = 0;
+//     cur = tb->list.head;
+//     add_value(tb, cur);
+//
+//     printf("2 ");
+//
+//     for(int i = 1; i < 5; i++)
+//     {
+//         cur = cur->next;
+//         cur->value = i;
+//         add_value(tb, cur);
+//
+//         printf("%d ", i + 2);
+//     }
+//
+//     print_table(tb);
+//
+//     printf("8 ");
+//
+//     delete_table(tb);
+//
+//     printf("9 ");
+
+}
 
 table* create_table(int size)
 {
     node* cur = NULL;
     table* tbl = NULL;
 
+    tbl = (table*)calloc(1, sizeof(table));
+    tbl->list = (t_list*)calloc(1, sizeof(t_list));
+
     tbl->size = size;
-    tbl->list.size = size;
+    tbl->list->size = size;
 
     tbl->cells = (node **) calloc(tbl->size, sizeof(node*));
 
-    cur = tbl->list.head = (node *) calloc(1, sizeof(node*));
+    cur = tbl->list->head;
 
     for (size_t i = 0; i < size - 1; ++i) {
         cur->next = (node *) calloc(1, sizeof(node*));
         cur = cur->next;
     }
-    tbl->list.end = cur;
+    tbl->list->end = cur;
     return tbl;
 }
 
 
-static size_t get_hash(node* node, table* table)
+size_t get_hash(node* nd, table* tbl)
 {
     const float a = 0.6180339887;
     size_t pos = 0;
 
-    pos = floor((*table).size * ((a * (node->value)) - (int)((a * (node->value)))));
+    pos = (int)floor(tbl->size * ((a * (nd->value)) - (int)((a * (nd->value)))));
     return pos;
 }
 
 
 void delete_table(struct table* tbl) {
-    struct node* cur = tbl->list.head;
+    struct node* cur = tbl->list->head;
 
-    while (cur->next != tbl->list.end) {
+    while (cur->next != tbl->list->end) {
         free(cur);
         cur = cur->next;
     }
@@ -76,15 +119,15 @@ void delete_table(struct table* tbl) {
 }
 
 
-void add_value(table* table, node* node)
+void add_value(table* tbl, node* nd)
 {
     size_t position = 0;
-    position = get_hash(node, table);
+    position = get_hash(nd, tbl);
 
-    (*table).cells[position] = node;
+    tbl->cells[position] = nd;
 }
 
-node* delete_cell(table* table, int value)
+node* delete_cell(table* tbl, int value)
 {
     size_t pos = 0;
     node* ptr = NULL;
@@ -93,17 +136,17 @@ node* delete_cell(table* table, int value)
     nd.value = value;
     nd.next = NULL;
 
-    pos = get_hash(&nd, table);
-    if (table->cells[pos] == NULL)
+    pos = get_hash(&nd, tbl);
+    if (tbl->cells[pos] == NULL)
         return NULL;
 
-    ptr = table->cells[pos];
-    table->cells[pos] = NULL;
+    ptr = tbl->cells[pos];
+    tbl->cells[pos] = NULL;
     return ptr;
 }
 
 
-static void print_list(const t_list* lst) {
+void print_list(t_list* lst) {
     node* cur = lst->head;
     size_t i = 0;
 
@@ -116,8 +159,7 @@ static void print_list(const t_list* lst) {
     printf("%p %i (next->%p)\n", cur, cur->value, cur->next);
 }
 
-
-static void print_table(const table* tbl) {
+void print_table(const table* tbl) {
     printf("LIST:\n");
     print_list(&tbl->list);
 
@@ -130,17 +172,16 @@ static void print_table(const table* tbl) {
 }
 
 
-static void push_node(t_list* list, node* node)
+void push_node(t_list* list, node* nd)
 {
     node* nxt = NULL;
     nxt = list->head;
-    list->head = node;
-    node->next = nxt;
+    list->head = nd;
+    nd->next = nxt;
     list->size += 1;
 }
 
-
-static void delete_last(t_list* list)
+void delete_last(t_list* list)
 {
     node* cur = NULL;
     if (list->head == NULL)
@@ -156,29 +197,3 @@ static void delete_last(t_list* list)
         list->size -= 1;
     }
 }
-
-
-//int main()
-//{
-//    table* tb = NULL;
-//    node* cur = NULL;
-//
-//    tb = create_table(10);
-//
-//    tb->list.head->value = 0;
-//    cur = tb->list.head;
-//    add_value(tb, cur);
-//
-//    for(int i = 1; i < 5; i++)
-//    {
-//        cur = cur->next;
-//        cur->value = i;
-//        add_value(tb, cur);
-//    }
-//
-//    print_table(tb);
-//
-//    delete_table(tb);
-//
-//}
-//
