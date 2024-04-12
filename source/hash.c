@@ -4,12 +4,12 @@
 #include <assert.h>
 #include "../include/hash.h"
 
-// сначала определяем структуры - потом функции
+// сначала определяем структуры - потом функции +
 typedef struct _hashnode {
     THashContent cont;
     THashValue value;
     t_node next;
-} t_node; // == table node сразe используем typedef
+} t_node; // == table node сразe используем typedef +
 
 struct table {
     t_node** cells;
@@ -17,28 +17,29 @@ struct table {
     size_t size;
 };
 
-// заменяем на static size_t get_hash(TMap* table, THashValue value)
-static size_t get_hash(node* node, table* table);
+// заменяем на static size_t get_hash(TMap* table, THashValue value) +
+static size_t get_hash(TMap* table, THashValue value);
 
-// заменяем на static void print_table(const TMap* table);
-static void print_table(const table* tbl);
+// заменяем на static void print_table(const TMap* table); +
+static void print_table(const TMap* tbl);
 
-// заменяем на static void print_chain(t_node head);
-static void print_list(t_list* lst);
+// заменяем на static void print_chain(t_node head); +
+static void print_chain(t_node head);
 
-// убираем эту фкнцию
-static void delete_last(t_list* list);
+// убираем эту фкнцию +
+// static void delete_last(t_list* list);
 
-// добавляем функцию static void delete_chain(t_node* head);
+// добавляем функцию static void delete_chain(t_node* head); +
+static void delete_chain(t_node* head);
 
-// заменяем на static void push_node(t_node* head, t_node* node);
-static void push_node(t_list* list, node* node);
+// заменяем на static void push_node(t_node* head, t_node* node); +
+static void push_node(t_node* head, t_node* node);
 
-// перенеси всю функцию main в отдельный файл /tests/test_hash.c и 
+// перенеси всю функцию main в отдельный файл /tests/test_hash.c и
 // и используй раздельную компиляцию для тестирования
-int main() 
+int main()
 {
-    printf("govno ");
+    printf("start ");
 
     table* tb = NULL;
     node* cur = NULL;
@@ -215,20 +216,3 @@ void push_node(t_list* list, node* nd)
     list->size += 1;
 }
 
-// бесполезная функция, если есть delete_cell
-void delete_last(t_list* list)
-{
-    node* cur = NULL;
-    if (list->head == NULL)
-        return;
-    else
-    {
-        cur = list->head;
-        while(cur->next != list->end)
-            cur = cur->next;
-        list->end->value = 0;
-        list->end = cur;
-        cur->next = NULL;
-        list->size -= 1;
-    }
-}
