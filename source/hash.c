@@ -1,39 +1,42 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
+#include <assert.h>
 #include "../include/hash.h"
 
+// сначала определяем структуры - потом функции
+typedef struct _hashnode {
+    THashContent cont;
+    THashValue value;
+    t_node next;
+} t_node; // == table node сразe используем typedef
+
+struct table {
+    t_node** cells;
+    t_node* accumulating_list;
+    size_t size;
+};
+
+// заменяем на static size_t get_hash(TMap* table, THashValue value)
 static size_t get_hash(node* node, table* table);
 
+// заменяем на static void print_table(const TMap* table);
 static void print_table(const table* tbl);
 
+// заменяем на static void print_chain(t_node head);
 static void print_list(t_list* lst);
 
+// убираем эту фкнцию
 static void delete_last(t_list* list);
 
+// добавляем функцию static void delete_chain(t_node* head);
+
+// заменяем на static void push_node(t_node* head, t_node* node);
 static void push_node(t_list* list, node* node);
 
-struct node
-{
-    int value;
-    node* next;
-};
-
-struct t_list
-{
-    node* head;
-    node* end;
-    int size;
-};
-
-struct table
-{
-    node** cells;
-    t_list* list;
-    int size;
-};
-
-int main()
+// перенеси всю функцию main в отдельный файл /tests/test_hash.c и 
+// и используй раздельную компиляцию для тестирования
+int main() 
 {
     printf("govno ");
 
@@ -45,7 +48,8 @@ int main()
     tb = create_table(10);
 
     printf("1 ");
-
+//// не коммить участки кода!!!
+//// При необходимости используй #if 0 ...code... #endif
 //     tb->list.head->value = 0;
 //     cur = tb->list.head;
 //     add_value(tb, cur);
@@ -71,32 +75,30 @@ int main()
 
 }
 
-table* create_table(int size)
-{
-    node* cur = NULL;
-    table* tbl = NULL;
+TMap* create_table(size_t size) {
+    t_node* cur = NULL;
+    TMap* tbl = NULL;
 
-    tbl = (table*)calloc(1, sizeof(table));
-    tbl->list = (t_list*)calloc(1, sizeof(t_list));
-
+    tbl = (TMap *) calloc(1, sizeof(TMap));
     tbl->size = size;
-    tbl->list->size = size;
 
-    tbl->cells = (node **) calloc(tbl->size, sizeof(node*));
+    tbl->cells = (t_node**) calloc(tbl->size, sizeof(t_node*));
 
-    cur = tbl->list->head;
+    tbl->accumulating_list = (t_node *) calloc(1, sizeof(t_node));
+
+    cur = tbl->accumulating_list;
 
     for (size_t i = 0; i < size - 1; ++i) {
-        cur->next = (node *) calloc(1, sizeof(node*));
+        cur->next = (t_node *) calloc(1, sizeof(t_node*));
         cur = cur->next;
     }
-    tbl->list->end = cur;
+
     return tbl;
 }
 
-
-size_t get_hash(node* nd, table* tbl)
-{
+// заменяем на static size_t get_hash(TMap* table, THashValue value)
+size_t get_hash(node* nd, table* tbl) {
+    // можно использовать алгоритм проще: return value % table->size;
     const float a = 0.6180339887;
     size_t pos = 0;
 
@@ -104,8 +106,26 @@ size_t get_hash(node* nd, table* tbl)
     return pos;
 }
 
+// добавляем такую функцию:
+// static void delete_chain(t_node* head) {
+//     t_node* tofree;
+//
+//     while (head != NULL) {
+//         tofree = head;
+//         head = head->next;
+//         free(tofree);
+//     }
+// }
 
-void delete_table(struct table* tbl) {
+void delete_table(TMap* tbl) {
+    // Desctuctor по-другому надо написать...
+    // Вот так вот:
+    // for (size_t i = 0; i < tbl->size; ++i) {
+    //     delete_chain(tbl->cells[i]);
+    // }
+    // free(tbl->cells);
+    // free(tbl->accumulating_list);
+    // free(tbl); // ничего лишнего
     struct node* cur = tbl->list->head;
 
     while (cur->next != tbl->list->end) {
@@ -118,17 +138,25 @@ void delete_table(struct table* tbl) {
     free(tbl->cells);
 }
 
-
-void add_value(table* tbl, node* nd)
-{
+// сигнатура:
+// void add_value(TMap* table, THashContent cont, THashValue value);
+void add_value(table* tbl, node* nd) {
+    // вместо нижних двух строк сразу
+    // size_t position = get_hash(tbl, value);
     size_t position = 0;
     position = get_hash(nd, tbl);
 
+    // Это не будер работать, потому что так ты теряешь ячейки при коллизии
     tbl->cells[position] = nd;
+    // Будет работать вот это:
+    // t_node* old_head = tbl->cells[position]; // сохраняем старую голову
+    // tbl->cells[position] = tbl->accumulation_list; // добавляем перед ней новую ноду
+    // tbl->accumulation_list = tbl->accumulation_list->next; // сдвигаем голову накопительного листа
+    // tbl->cells[position]->next = old_head; // привязываем старую голову к новой ноде
 }
 
-node* delete_cell(table* tbl, int value)
-{
+// аналогично add_value, только наоборот
+THashContent delete_cell(table* tbl, int value) {
     size_t pos = 0;
     node* ptr = NULL;
 
@@ -145,7 +173,12 @@ node* delete_cell(table* tbl, int value)
     return ptr;
 }
 
+// аналогично delete
+THashContent search_cell(TMap* table, THashValue value);
 
+
+// эта функция уже не будет работать, придйтся переписать
+// потому что у тебя теперь нет бесполезной структуры list
 void print_list(t_list* lst) {
     node* cur = lst->head;
     size_t i = 0;
@@ -159,6 +192,7 @@ void print_list(t_list* lst) {
     printf("%p %i (next->%p)\n", cur, cur->value, cur->next);
 }
 
+// Тоже не будет работать, смотри устройство хэша, я его объяснял
 void print_table(const table* tbl) {
     printf("LIST:\n");
     print_list(&tbl->list);
@@ -171,7 +205,7 @@ void print_table(const table* tbl) {
     printf("\n");
 }
 
-
+//написана выше
 void push_node(t_list* list, node* nd)
 {
     node* nxt = NULL;
@@ -181,6 +215,7 @@ void push_node(t_list* list, node* nd)
     list->size += 1;
 }
 
+// бесполезная функция, если есть delete_cell
 void delete_last(t_list* list)
 {
     node* cur = NULL;

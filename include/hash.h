@@ -1,19 +1,31 @@
 #ifndef HASH_H
 #define HASH_H
 
-typedef struct t_list t_list;
-struct t_list;
+typedef struct list* THashContent; // == Hash Content Type
+// struct list; // included from list.h
 
-typedef struct node node;
-struct node;
+typedef size_t THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
 
-typedef struct table table;
-struct table;
+typedef struct table TMap; // == Hash Map Type
+struct table; // main struct defenition
 
-table* create_table(int size);
-void delete_table(table* tbl);
+// creates a list with specified size and returns the link to it
+TMap* create_table(size_t size);
 
-void add_value(table* table, node* value);
-node* delete_cell(table* table, int value);
+void delete_table(TMap* table);
+
+// adds node with value (key == value)
+void add_value(TMap* table, THashContent cont, THashValue value);
+
+// Ищем ячейку с созержанием value
+THashContent search_cell(TMap* table, THashValue value);
+
+// removes the cell (from local linked list)
+// with value == value,
+// but not removes the public linked list's node.
+// returns link to removed node (belonging to public linked list, 
+// not to local linked list), 
+// and NULL if there is no cell with such value
+THashContent delete_cell(TMap* table, THashValue value);
 
 #endif
