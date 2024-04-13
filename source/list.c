@@ -108,6 +108,16 @@ Node* get_head (List* list)
     return list->head;
 }
 
+Node* get_tail (List* list)
+{
+    return list->tail;
+}
+
+size_t get_value (Node* node)
+{
+    return node->val;
+}
+
 void list_dump (List* list)
 {
     Node* list_temp = list->head;
