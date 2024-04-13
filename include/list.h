@@ -12,7 +12,7 @@ typedef struct node Node;
 
 List* create_list(size_t number_of_elements);
 
-void move_to_head (List* list, int val);
+void move_to_head(List* list, Node* new_head);
 
 void delete_list(List* list);
 

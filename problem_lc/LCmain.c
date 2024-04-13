@@ -9,14 +9,15 @@ int main() {
     size_t m, n;
     size_t num_hit = 0;
     struct cache* cch;
+    int res = 0;
 
-    scanf("%lu%lu", &m, &n);
+    res = scanf("%lu%lu", &m, &n);
 
     cch = create_cache(m);
 
     for (size_t i = 0; i < n; ++i) {
         int next;
-        scanf("%d", &next);
+        res = scanf("%d", &next);
 
         num_hit += cache(cch, next);
     }
