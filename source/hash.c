@@ -6,12 +6,11 @@
 #include "../include/hash.h"
 #include "../include/list.h"
 
-typedef struct _hashnode t_node;
-struct _hashnode {
+typedef struct _hashnode {
     THashContent cont;
     THashValue value;
     t_node* next;
-};
+} t_node;
 
 struct table {
     t_node** cells;
@@ -101,21 +100,17 @@ THashContent delete_cell(TMap* table, THashValue value) {
         if ((cur->value == value) && (prev != NULL)) {
             prev->next = cur->next;
             save = cur->cont;
-            cur->cont = NULL;
-            cur->value = 0;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu\n", value);
+           // printf("delete success\nvalue: %lu\n", value);
             return save;
         }
         else if ((cur->value == value) && (prev == NULL)) {
             save = cur->cont;
             table->cells[position] = cur->next;
-            cur->cont = NULL;
-            cur->value = 0;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu\n", value);
+            //printf("delete success\nvalue: %lu\n", value);
             return save;
         }
         prev = cur;
