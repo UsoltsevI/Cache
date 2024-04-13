@@ -5,7 +5,7 @@
 
 int main()
 {
-    printf("start ");
+    printf("start\n");
 
     TMap* tb = NULL;
     THashContent ptr = NULL;
@@ -16,11 +16,11 @@ int main()
 
      printf("1\n");
 
-     for(int i = 1; i < 5; ++i) {
-         add_value(tb, NULL, i);
+    for(int i = 1; i < 5; ++i) {
+        add_value(tb, NULL, i);
 
-         printf("%d\n", i + 1);
-     }
+        printf("%d\n", i + 1);
+    }
     ptr = search_cell(tb, 3);
 
     printf("6\n");
