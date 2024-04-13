@@ -36,6 +36,5 @@ int main()
     delete_table(tb);
 
     printf("9\n");
-  //   #endif
 
 }

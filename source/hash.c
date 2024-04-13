@@ -98,7 +98,7 @@ void add_value(TMap* table, THashContent cont, THashValue value) {
     table->accumulating_list = table->accumulating_list->next; // сдвигаем голову накопительного листа
     table->cells[position]->next = old_head;  // привязываем старую голову к новой ноде
     table->cells[position]->cont = cont;
-    table->cells[position]->cont = value;
+    table->cells[position]->value = value;
 
 }
 
@@ -119,7 +119,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             cur->value = 0;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu/n", value);
+            printf("delete success\nvalue: %lu\n", value);
             return save;
         }
         else if ((cur->value == value) && (prev == NULL)) {
@@ -129,7 +129,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             cur->value = 0;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu/n", value);
+            printf("delete success\nvalue: %lu\n", value);
             return save;
         }
         prev = cur;
@@ -145,7 +145,7 @@ THashContent search_cell(TMap* table, THashValue value) {
     t_node* cur = table->cells[position];
     while(cur != NULL) {
         if (cur->value == value) {
-            printf("search success\nvalue: %lu/n", value);
+            printf("search success\nvalue: %lu\n", value);
             return cur->cont;
         }
         cur = cur->next;
@@ -168,9 +168,11 @@ static void print_hash_list(t_node* head) {
 void print_hash_table(const TMap* table) {
     printf("table size: %lu\n", table->size);
     for(int i = 0; i < table->size; ++i) {
-        printf("//////////////////////////////\n");
-        printf("cell number %i\n", i);
-        print_hash_list(table->cells[i]);
-        printf("//////////////////////////////\n");
+        if (table->cells[i] != NULL) {
+            printf("//////////////////////////////\n");
+            printf("cell number %i\n", i);
+            print_hash_list(table->cells[i]);
+            printf("//////////////////////////////\n");
+        }
     }
 }
