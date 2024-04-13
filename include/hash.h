@@ -2,7 +2,7 @@
 #define HASH_H
 
 typedef struct list* THashContent; // == Hash Content Type
-// struct list; // included from list.h
+//struct list; // included from list.h
 
 typedef size_t THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
 
@@ -23,9 +23,11 @@ THashContent search_cell(TMap* table, THashValue value);
 // removes the cell (from local linked list)
 // with value == value,
 // but not removes the public linked list's node.
-// returns link to removed node (belonging to public linked list, 
-// not to local linked list), 
+// returns link to removed node (belonging to public linked list,
+// not to local linked list),
 // and NULL if there is no cell with such value
 THashContent delete_cell(TMap* table, THashValue value);
+
+void print_hash_table(const TMap* tbl);
 
 #endif

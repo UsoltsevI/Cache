@@ -1,43 +1,40 @@
 // перенеси всю функцию main в отдельный файл /tests/test_hash.c и +
 // и используй раздельную компиляцию для тестирования +
-#include"../include/hash.h"
+#include"../include/hash.c"
 
 int main()
 {
     printf("start ");
 
-    table* tb = NULL;
-    node* cur = NULL;
+    TMap* tb = NULL;
+    THashContent ptr = NULL;
 
-    printf("0 ");
+    printf("0\n");
 
     tb = create_table(10);
 
-    printf("1 ");
-// не коммить участки кода!!! +
-// При необходимости используй #if 0 ...code... #endif +
-    # if 0
-     tb->list.head->value = 0;
-     cur = tb->list.head;
-     add_value(tb, cur);
-
-     printf("2 ");
+     printf("1\n");
 
      for(int i = 1; i < 5; ++i) {
-         cur = cur->next;
-         cur->value = i;
-         add_value(tb, cur);
+         add_value(tb, NULL, i);
 
-         printf("%d ", i + 2);
+         printf("%d\n", i + 1);
      }
+    ptr = search_cell(tb, 3);
 
-     print_table(tb);
+    printf("6\n");
+    print_hash_table(tb);
 
-     printf("8 ");
+    printf("7\n");
 
-     delete_table(tb);
+    ptr = delete_cell(tb, 3);
 
-     printf("9 ");
-     #endif
+    ptr = search_cell(tb, 3);
+
+    printf("8\n");
+    delete_table(tb);
+
+    printf("9\n");
+  //   #endif
 
 }
