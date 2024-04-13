@@ -124,7 +124,7 @@ THashContent search_cell(TMap* table, THashValue value) {
     t_node* cur = table->cells[position];
     while(cur != NULL) {
         if (cur->value == value) {
-            printf("search success\nvalue: %lu\n", value);
+            //printf("search success\nvalue: %lu\n", value);
             return cur->cont;
         }
         cur = cur->next;
