@@ -7,11 +7,12 @@
 #include "../include/list.h"
 
 // сначала определяем структуры - потом функции +
-typedef struct _hashnode {
+typedef struct _hashnode t_node;
+struct _hashnode {
     THashContent cont;
     THashValue value;
     t_node* next;
-} t_node; // == table node сразe используем typedef +
+}; // == table node сразe используем typedef +
 
 struct table {
     t_node** cells;
@@ -61,7 +62,7 @@ static size_t get_hash(TMap* table, THashValue value) {
     const double a = 0.6180339887;
     size_t pos = 0;
 
-    pos = (int)floor(table->size * ((a * (value)) - (int)((a * (value)))));
+    pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
     return pos;
 }
 
@@ -104,7 +105,8 @@ void add_value(TMap* table, THashContent cont, THashValue value) {
 // аналогично add_value, только наоборот
 THashContent delete_cell(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
-    t_node* cur = NULL, prev = NULL;
+    t_node* cur = NULL;
+    t_node* prev = NULL;
     THashContent save = NULL;
 
     cur = table->cells[position];
@@ -115,9 +117,9 @@ THashContent delete_cell(TMap* table, THashValue value) {
             save = cur->cont;
             cur->cont = NULL;
             cur->value = 0;
-            cur->next = accumulating_list;
-            accumulating_list = cur;
-            printf("delete success\nvalue: %u/n", value);
+            cur->next = table->accumulating_list;
+            table->accumulating_list = cur;
+            printf("delete success\nvalue: %lu/n", value);
             return save;
         }
         else if ((cur->value == value) && (prev == NULL)) {
@@ -125,9 +127,9 @@ THashContent delete_cell(TMap* table, THashValue value) {
             table->cells[position] = cur->next;
             cur->cont = NULL;
             cur->value = 0;
-            cur->next = accumulating_list;
-            accumulating_list = cur;
-            printf("delete success\nvalue: %u/n", value);
+            cur->next = table->accumulating_list;
+            table->accumulating_list = cur;
+            printf("delete success\nvalue: %lu/n", value);
             return save;
         }
         prev = cur;
@@ -164,7 +166,7 @@ static void print_hash_list(t_node* head) {
 
 // Тоже не будет работать, смотри устройство хэша, я его объяснял
 void print_hash_table(const TMap* table) {
-    printf("table size: %u\n", table->size);
+    printf("table size: %lu\n", table->size);
     for(int i = 0; i < table->size; ++i) {
         printf("//////////////////////////////\n");
         printf("cell number %i\n", i);

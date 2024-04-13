@@ -1,6 +1,7 @@
 // перенеси всю функцию main в отдельный файл /tests/test_hash.c и +
 // и используй раздельную компиляцию для тестирования +
-#include"../include/hash.c"
+#include <stdio.h>
+#include"../include/hash.h"
 
 int main()
 {

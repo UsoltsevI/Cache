@@ -1,6 +1,9 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include <stddef.h>
+#include <stdlib.h>
+
 typedef struct list* THashContent; // == Hash Content Type
 //struct list; // included from list.h
 
