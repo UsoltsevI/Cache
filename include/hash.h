@@ -20,7 +20,7 @@ void delete_table(TMap* table);
 // adds node with value (key == value)
 void add_value(TMap* table, THashContent cont, THashValue value);
 
-// Ищем ячейку с созержанием value
+// find cell with value
 THashContent search_cell(TMap* table, THashValue value);
 
 // removes the cell (from local linked list)
