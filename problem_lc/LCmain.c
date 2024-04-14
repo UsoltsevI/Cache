@@ -18,6 +18,7 @@ int main() {
     for (size_t i = 0; i < n; ++i) {
         int next;
         res = scanf("%d", &next);
+        // printf("ghg\n");
 
         num_hit += cache(cch, next);
     }

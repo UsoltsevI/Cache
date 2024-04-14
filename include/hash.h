@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-typedef struct list* THashContent; // == Hash Content Type
+typedef struct node* THashContent; // == Hash Content Type
 //struct list; // included from list.h
 
 typedef size_t THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
