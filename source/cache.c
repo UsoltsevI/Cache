@@ -45,7 +45,7 @@ int cache(struct cache* cch, CacheValueType value) {
     // (the tail removes automatically, see the list's implementation)
     add_to_head(cch->lst, value);
     // and, finally, adds this node to hashmap
-    add_value(cch->tbl, value, get_head(cch->lst));
+    add_value(cch->tbl, get_head(cch->lst), value);
 
     return 0;
 }

@@ -9,7 +9,7 @@
 typedef struct _hashnode {
     THashContent cont;
     THashValue value;
-    t_node* next;
+    struct _hashnode* next;
 } t_node;
 
 struct table {
@@ -49,34 +49,35 @@ TMap* create_table(size_t size) {
 
 static size_t get_hash(TMap* table, THashValue value) {
     // можно использовать алгоритм проще: return value % table->size;
-    const double a = 0.6180339887;
-    size_t pos = 0;
+    // const double a = 0.6180339887;
+    // size_t pos = 0;
 
-    pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
-    return pos;
+    // pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
+    // return pos;
+    return value % table->size;
 }
 
- static void delete_chain(t_node* head) {
-     t_node* tofree;
+static void delete_chain(t_node* head) {
+    t_node* tofree;
 
-     while (head != NULL) {
-         tofree = head;
-         head = head->next;
-         free(tofree);
-     }
- }
+    while (head != NULL) {
+        tofree = head;
+        head = head->next;
+        free(tofree);
+    }
+}
 
 void delete_table(TMap* tbl) {
-     for (size_t i = 0; i < tbl->size; ++i) {
-         delete_chain(tbl->cells[i]);
-     }
-     free(tbl->cells);
-     free(tbl->accumulating_list);
-     free(tbl);
+    for (size_t i = 0; i < tbl->size; ++i) {
+        delete_chain(tbl->cells[i]);
+    }
+
+    free(tbl->cells);
+    delete_chain(tbl->accumulating_list);
+    free(tbl);
 }
 
 void add_value(TMap* table, THashContent cont, THashValue value) {
-
     size_t position = get_hash(table, value);
 
     t_node* old_head = table->cells[position];
@@ -85,7 +86,6 @@ void add_value(TMap* table, THashContent cont, THashValue value) {
     table->cells[position]->next = old_head;
     table->cells[position]->cont = cont;
     table->cells[position]->value = value;
-
 }
 
 THashContent delete_cell(TMap* table, THashValue value) {
@@ -102,33 +102,38 @@ THashContent delete_cell(TMap* table, THashValue value) {
             save = cur->cont;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-           // printf("delete success\nvalue: %lu\n", value);
+            printf("delete success\nvalue: %lu\n", value);
             return save;
-        }
-        else if ((cur->value == value) && (prev == NULL)) {
+
+        } else if ((cur->value == value) && (prev == NULL)) {
             save = cur->cont;
             table->cells[position] = cur->next;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            //printf("delete success\nvalue: %lu\n", value);
+            printf("delete success\nvalue: %lu\n", value);
             return save;
         }
+
         prev = cur;
         cur = cur->next;
     }
+
     return NULL;
 }
 
 THashContent search_cell(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
     t_node* cur = table->cells[position];
+
     while(cur != NULL) {
         if (cur->value == value) {
-            //printf("search success\nvalue: %lu\n", value);
+            // printf("search success\nvalue: %lu\n", value);
             return cur->cont;
         }
+
         cur = cur->next;
     }
+
     return NULL;
 }
 
