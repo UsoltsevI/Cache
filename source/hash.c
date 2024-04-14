@@ -6,11 +6,12 @@
 #include "../include/hash.h"
 #include "../include/list.h"
 
-typedef struct _hashnode {
+typedef struct _hashnode t_node;
+struct _hashnode {
     THashContent cont;
     THashValue value;
     t_node* next;
-} t_node;
+};
 
 struct table {
     t_node** cells;
