@@ -97,6 +97,7 @@ void move_to_head(List* list, Node* new_head) {
     list->tail->next = new_head;
 
     list->head = new_head;
+    list->tail = list->head->prev;
 }
 
 Node* add_to_head(List* list, int val) {
@@ -204,12 +205,12 @@ TMap* create_table(size_t size) {
 
 static size_t get_hash(TMap* table, THashValue value) {
     // можно использовать алгоритм проще: return value % table->size;
-    // const double a = 0.6180339887;
-    // size_t pos = 0;
+    const double a = 0.6180339887;
+    size_t pos = 0;
 
-    // pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
-    // return pos;
-    return value % table->size;
+    pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
+    return pos;
+    // return value % table->size;
 }
 
 static void delete_chain(t_node* head) {
@@ -257,6 +258,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             save = cur->cont;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
+
             // printf("delete success\nvalue: %lu\n", value);
             return save;
 
@@ -266,6 +268,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
             // printf("delete success\nvalue: %lu\n", value);
+
             return save;
         }
 
@@ -344,13 +347,6 @@ struct cache* create_cache(size_t size) {
 int cache(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
-    // There is no need to do anything if 
-    // value == the_last_value in the cache
-    if (get_value(get_head(cch->lst)) == value) {
-        return 1;
-    }
-
-    // removes cell from table
     nd = search_cell(cch->tbl, value);
     
     // if the sutable cell has been founded

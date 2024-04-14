@@ -71,10 +71,10 @@ void move_to_head(List* list, Node* new_head) {
     new_head->prev->next = new_head->next;
     new_head->next->prev = new_head->prev;
 
-    list->head->prev = new_head;
     new_head->next = list->head;
     new_head->prev = list->tail;
 
+    list->head->prev = new_head;
     list->tail->next = new_head;
 
     list->head = new_head;

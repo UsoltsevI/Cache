@@ -102,11 +102,6 @@ THashContent delete_cell(TMap* table, THashValue value) {
             save = cur->cont;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-<<<<<<< HEAD
-            // printf("delete success\nvalue: %lu\n", value);
-=======
-           // printf("delete success\nvalue: %lu\n", value);
->>>>>>> 1d60d156183780364fac262f53b3678dcd487d3d
             return save;
         }
         else if ((cur->value == value) && (prev == NULL)) {
@@ -114,11 +109,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             table->cells[position] = cur->next;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-<<<<<<< HEAD
-            // printf("delete success\nvalue: %lu\n", value);
-=======
-            //printf("delete success\nvalue: %lu\n", value);
->>>>>>> 1d60d156183780364fac262f53b3678dcd487d3d
+
             return save;
         }
         prev = cur;

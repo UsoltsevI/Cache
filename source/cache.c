@@ -22,19 +22,13 @@ struct cache* create_cache(size_t size) {
 int cache(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
-    // There is no need to do anything if 
-    // value == the_last_value in the cache
-    if (get_value(get_head(cch->lst)) == value) {
-        return 1;
-    }
-
-    // removes cell from table
     nd = search_cell(cch->tbl, value);
     
     // if the sutable cell has been founded
     // just move it to the head
     if (nd != NULL) {
         move_to_head(cch->lst, nd);
+
         return 1;
     }
 

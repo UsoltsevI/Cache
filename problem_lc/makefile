@@ -17,10 +17,10 @@ list.o: ../source/list.c
 	gcc -O2 -c ../source/list.c -o list.o 
 
 test: LC.x
-	for i in $$(seq 1 1 9); do echo -n "Tests/test$${i}.ans:\nright answer: " && cat Tests/test$${i}.ans && echo -n "result:       " && ./LC.x < Tests/test$${i}.dat && echo ""; done
+	for i in $$(seq 1 1 12); do echo -n "Tests/test$${i}.ans:\nright answer: " && cat Tests/test$${i}.ans && echo -n "result:       " && ./LC.x < Tests/test$${i}.dat && echo ""; done
 
 testsep: LCsep.x
-	for i in $$(seq 1 1 9); do echo -n "Tests/test$${i}.ans:\nright answer: " && cat Tests/test$${i}.ans && echo -n "result:       " && ./LCsep.x < Tests/test$${i}.dat && echo ""; done
+	for i in $$(seq 1 1 12); do echo -n "Tests/test$${i}.ans:\nright answer: " && cat Tests/test$${i}.ans && echo -n "result:       " && ./LCsep.x < Tests/test$${i}.dat && echo ""; done
 
 clean:
 	rm *.x
