@@ -17,16 +17,16 @@ struct list {
 
 
 List* create_list (size_t number_of_elements){
-    List* list = (List*)calloc(1, sizeof(List));
+    List* list = (List*) calloc(1, sizeof(List));
+    Node* list_temp;
 
     list->size = number_of_elements;
 
-    list->head = (Node*)calloc(1, sizeof(Node));
-    Node* list_temp = list->head;
+    list->head = (Node*) calloc(1, sizeof(Node));
+    list_temp = list->head;
 
-    for (int i = 0; i < number_of_elements - 1; i++)
-    {
-        list_temp->next = (Node*)calloc(1, sizeof(Node));
+    for (size_t i = 0; i < number_of_elements - 1; i++) {
+        list_temp->next = (Node*) calloc(1, sizeof(Node));
         list_temp->next->prev = list_temp;
 
         list_temp = list_temp->next;  
@@ -41,11 +41,13 @@ List* create_list (size_t number_of_elements){
 }
 
 void delete_list (List* list) {
-    Node* list_temp = list->head;
+    Node* temp = list->head;
+    Node* to_free;
 
-    for (int i = 0; i < list->size - 1; ++i) {
-        free(list_temp->prev);
-        list_temp = list_temp->next;
+    for (size_t i = 0; i < list->size; ++i) {
+        to_free = temp;
+        temp = temp->next;
+        free(to_free);
     }
     // free(list_temp);
     free(list);
@@ -101,7 +103,7 @@ int get_value(Node* node) {
 void list_dump(List* list) {
     Node* list_temp = list->head;
 
-    for (int i = 0; i < list->size; ++i) {
+    for (size_t i = 0; i < list->size; ++i) {
         printf("%ld ->", list_temp->val);
         list_temp = list_temp->next;
     }

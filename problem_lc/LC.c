@@ -1,9 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 typedef struct list List;
+
 typedef struct node Node;
-typedef int CacheValueType;
+
+List* create_list(size_t number_of_elements);
+
+void move_to_head(List* list, Node* new_head);
+
+void delete_list(List* list);
+
+Node* add_to_head(List* list, int val);
+
+void list_dump (List* list);
+
+Node* get_head(List* list);
+
+Node* get_tail(List* list);
+
+int get_value(Node* node);
+
 
 struct node {
     struct node* next;
@@ -17,18 +35,17 @@ struct list {
     size_t size;
 };
 
-
 List* create_list (size_t number_of_elements){
-    List* list = (List*)calloc(1, sizeof(List));
+    List* list = (List*) calloc(1, sizeof(List));
     Node* list_temp;
 
     list->size = number_of_elements;
 
-    list->head = (Node*)calloc(1, sizeof(Node));
+    list->head = (Node*) calloc(1, sizeof(Node));
     list_temp = list->head;
 
-    for (size_t i = 0; i < number_of_elements - 1; i++){
-        list_temp->next = (Node*)calloc(1, sizeof(Node));
+    for (size_t i = 0; i < number_of_elements - 1; i++) {
+        list_temp->next = (Node*) calloc(1, sizeof(Node));
         list_temp->next->prev = list_temp;
 
         list_temp = list_temp->next;  
@@ -43,11 +60,13 @@ List* create_list (size_t number_of_elements){
 }
 
 void delete_list (List* list) {
-    Node* list_temp = list->head;
+    Node* temp = list->head;
+    Node* to_free;
 
-    for (size_t i = 0; i < list->size - 1; ++i) {
-        free(list_temp->prev);
-        list_temp = list_temp->next;
+    for (size_t i = 0; i < list->size; ++i) {
+        to_free = temp;
+        temp = temp->next;
+        free(to_free);
     }
     // free(list_temp);
     free(list);
@@ -111,11 +130,7 @@ void list_dump(List* list) {
     printf("NULL\n");
 }
 
-#include <stdio.h>
-#include <malloc.h>
-#include <math.h>
-#include <assert.h>
-#include <stddef.h>
+
 
 typedef struct node* THashContent; // == Hash Content Type
 //struct list; // included from list.h
@@ -124,6 +139,27 @@ typedef size_t THashValue; // == Hash Value Type. Ну то есть то, по 
 
 typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition
+
+// creates a list with specified size and returns the link to it
+TMap* create_table(size_t size);
+
+void delete_table(TMap* table);
+
+// adds node with value (key == value)
+void add_value(TMap* table, THashContent cont, THashValue value);
+
+// find cell with value
+THashContent search_cell(TMap* table, THashValue value);
+
+// removes the cell (from local linked list)
+// with value == value,
+// but not removes the public linked list's node.
+// returns link to removed node (belonging to public linked list,
+// not to local linked list),
+// and NULL if there is no cell with such value
+THashContent delete_cell(TMap* table, THashValue value);
+
+void print_hash_table(const TMap* tbl);
 
 typedef struct _hashnode {
     THashContent cont;
@@ -159,7 +195,7 @@ TMap* create_table(size_t size) {
     cur = tbl->accumulating_list;
 
     for (size_t i = 0; i < size - 1; ++i) {
-        cur->next = (t_node *) calloc(1, sizeof(t_node*));
+        cur->next = (t_node *) calloc(1, sizeof(t_node));
         cur = cur->next;
     }
 
@@ -198,7 +234,7 @@ void delete_table(TMap* tbl) {
 
 void add_value(TMap* table, THashContent cont, THashValue value) {
     size_t position = get_hash(table, value);
-
+    
     t_node* old_head = table->cells[position];
     table->cells[position] = table->accumulating_list;
     table->accumulating_list = table->accumulating_list->next;
@@ -277,6 +313,19 @@ void print_hash_table(const TMap* table) {
     }
 }
 
+typedef int CacheValueType;
+struct cache;
+
+// constructor
+struct cache* create_cache(size_t size);
+
+// This function adds the value to cache 
+// and returns 1 if hit, 0 if miss
+int cache(struct cache* cch, CacheValueType value);
+
+// destructor
+void delete_cache(struct cache* cch);
+
 struct cache {
     struct table* tbl;
     struct list* lst;
@@ -329,8 +378,6 @@ void delete_cache(struct cache* cch) {
     delete_list(cch->lst);
     free(cch);
 }
-
-
 
 // This is the main function for the problem_LC
 // and separate compilation task. 

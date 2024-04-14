@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include "../include/list.h"
 
 typedef struct node* THashContent; // == Hash Content Type
 //struct list; // included from list.h

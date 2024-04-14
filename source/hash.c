@@ -40,7 +40,7 @@ TMap* create_table(size_t size) {
     cur = tbl->accumulating_list;
 
     for (size_t i = 0; i < size - 1; ++i) {
-        cur->next = (t_node *) calloc(1, sizeof(t_node*));
+        cur->next = (t_node *) calloc(1, sizeof(t_node));
         cur = cur->next;
     }
 
@@ -79,7 +79,7 @@ void delete_table(TMap* tbl) {
 
 void add_value(TMap* table, THashContent cont, THashValue value) {
     size_t position = get_hash(table, value);
-
+    
     t_node* old_head = table->cells[position];
     table->cells[position] = table->accumulating_list;
     table->accumulating_list = table->accumulating_list->next;
@@ -102,7 +102,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             save = cur->cont;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu\n", value);
+            // printf("delete success\nvalue: %lu\n", value);
             return save;
 
         } else if ((cur->value == value) && (prev == NULL)) {
@@ -110,7 +110,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
             table->cells[position] = cur->next;
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
-            printf("delete success\nvalue: %lu\n", value);
+            // printf("delete success\nvalue: %lu\n", value);
             return save;
         }
 
