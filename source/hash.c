@@ -40,7 +40,7 @@ TMap* create_table(size_t size) {
     cur = tbl->accumulating_list;
 
     for (size_t i = 0; i < size - 1; ++i) {
-        cur->next = (t_node *) calloc(1, sizeof(t_node*));
+        cur->next = (t_node *) calloc(1, sizeof(t_node));
         cur = cur->next;
     }
 
