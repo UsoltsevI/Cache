@@ -23,11 +23,18 @@ int cache(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     nd = search_cell(cch->tbl, value);
+
+    // printf("value = %u\n", value);
     
     // if the sutable cell has been founded
     // just move it to the head
     if (nd != NULL) {
         move_to_head(cch->lst, nd);
+
+        // printf("HIT!\n");
+        // list_dump(cch->lst);
+        // print_hash_table(cch->tbl);
+        // printf("\n");
 
         return 1;
     }
@@ -40,6 +47,11 @@ int cache(struct cache* cch, CacheValueType value) {
     add_to_head(cch->lst, value);
     // and, finally, adds this node to hashmap
     add_value(cch->tbl, get_head(cch->lst), value);
+
+    // printf("MISS!\n");
+    // list_dump(cch->lst);
+    // print_hash_table(cch->tbl);
+    // printf("\n");
 
     return 0;
 }

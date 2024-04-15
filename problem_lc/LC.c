@@ -35,6 +35,8 @@ struct list {
     size_t size;
 };
 
+const int LISTGARBAGE = -1;
+
 List* create_list (size_t number_of_elements){
     List* list = (List*) calloc(1, sizeof(List));
     Node* list_temp;
@@ -43,10 +45,12 @@ List* create_list (size_t number_of_elements){
 
     list->head = (Node*) calloc(1, sizeof(Node));
     list_temp = list->head;
+    list_temp->val = LISTGARBAGE;
 
     for (size_t i = 0; i < number_of_elements - 1; i++) {
         list_temp->next = (Node*) calloc(1, sizeof(Node));
         list_temp->next->prev = list_temp;
+        list_temp->next->val = LISTGARBAGE;
 
         list_temp = list_temp->next;  
     }
