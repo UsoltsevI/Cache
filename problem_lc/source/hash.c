@@ -103,8 +103,8 @@ THashContent delete_cell(TMap* table, THashValue value) {
             cur->next = table->accumulating_list;
             table->accumulating_list = cur;
             return save;
-        }
-        else if ((cur->value == value) && (prev == NULL)) {
+
+        } else if ((cur->value == value) && (prev == NULL)) {
             save = cur->cont;
             table->cells[position] = cur->next;
             cur->next = table->accumulating_list;
@@ -133,10 +133,12 @@ THashContent search_cell(TMap* table, THashValue value) {
 
 static void print_hash_list(t_node* head) {
     t_node* cur = head;
+
     while(cur != NULL) {
         printf("|| value: %lu ",cur->value);
         cur = cur->next;
     }
+    
     printf("||\n");
 }
 
