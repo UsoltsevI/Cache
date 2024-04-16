@@ -5,13 +5,51 @@ This is a school project to implement cache functions.
 
 The section will be finalized later...
 
-## Usage 
+## Usage:
 To install this repository tap in your console:
 ```
 $ git clone git@github.com:UsoltsevI/Cache.git
 ```
 
 The section will be finalized later...
+
+## Functions description:
+### Tree:
+Included files:
+* <stdio.h>
+* <stdlib.h>
+* ["/include/list.h"](/include/list.h)
+
+Typedefs:
+```
+typedef List* TTreeContent;
+typedef size_t TTreeValue;
+typedef struct tree Tree;
+```
+
+Structures:
+```
+struct tree;
+```
+
+Functions:
+```
+// creates tree with specified size and returns link to it
+struct list* create_tree(size_t size);
+
+// adds element with content cont sorting by value
+void tree_add_value(Tree* tree, TTreeContent cont, TTreeValue value);
+
+// deletes the node with the minimum value
+// returns a link to the content
+// NULL if not found
+TTreeContent tree_delete_min(Tree* tree);
+
+TTreeContent tree_delete_max(Tree* tree);
+
+void delete_tree(Tree* tree);
+```
+
 
 ## Useful links:
 * [Cache replacement policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
