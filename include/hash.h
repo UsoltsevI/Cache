@@ -4,11 +4,11 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "../include/list.h"
+#include "../include/cache.h"
 
-typedef struct node* THashContent; // == Hash Content Type
-//struct list; // included from list.h
+typedef List* THashContent; // == Hash Content Type
 
-typedef size_t THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
+typedef TCacheValue THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
 
 typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition
@@ -32,6 +32,6 @@ THashContent table_search_cell(TMap* table, THashValue value);
 // and NULL if there is no cell with such value
 THashContent table_delete_cell(TMap* table, THashValue value);
 
-void print_hash_table(const TMap* tbl);
+void print_hash_table(const TMap* table);
 
 #endif

@@ -56,27 +56,27 @@ static size_t get_hash(TMap* table, THashValue value) {
     return pos;
 }
 
- static void delete_chain(t_node* head) {
-     t_node* tofree;
+static void delete_chain(t_node* head) {
+    t_node* tofree;
 
-     while (head != NULL) {
-         tofree = head;
-         head = head->next;
-         free(tofree);
-     }
- }
+    while (head != NULL) {
+        tofree = head;
+        head = head->next;
+        free(tofree);
+    }
+}
 
 void delete_table(TMap* tbl) {
      for (size_t i = 0; i < tbl->size; ++i) {
          delete_chain(tbl->cells[i]);
      }
+
      free(tbl->cells);
      free(tbl->accumulating_list);
      free(tbl);
 }
 
 void table_add_value(TMap* table, THashContent cont, THashValue value) {
-
     size_t position = get_hash(table, value);
     
     t_node* old_head = table->cells[position];
@@ -90,7 +90,7 @@ void table_add_value(TMap* table, THashContent cont, THashValue value) {
 
 THashContent table_delete_cell(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
-    t_node* cur = NULL;
+    t_node* cur  = NULL;
     t_node* prev = NULL;
     THashContent save = NULL;
 
@@ -112,22 +112,27 @@ THashContent table_delete_cell(TMap* table, THashValue value) {
 
             return save;
         }
+
         prev = cur;
         cur = cur->next;
     }
+
     return NULL;
 }
 
 THashContent table_search_cell(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
     t_node* cur = table->cells[position];
+
     while(cur != NULL) {
         if (cur->value == value) {
             //printf("search success\nvalue: %lu\n", value);
             return cur->cont;
         }
+
         cur = cur->next;
     }
+
     return NULL;
 }
 
@@ -144,6 +149,7 @@ static void print_hash_list(t_node* head) {
 
 void print_hash_table(const TMap* table) {
     printf("table size: %lu\n", table->size);
+    
     for(int i = 0; i < table->size; ++i) {
         if (table->cells[i] != NULL) {
             printf("//////////////////////////////\n");

@@ -1,30 +1,81 @@
 # Cache project
 
 ## Brief description:
-This is a school project to implement cache functions.
+This is a school project to implement cache functions. This project implements a cache function that works on the [LRU-K](/documents/Eng_LRU_K.pdf) principle. Also in this project there is a regular LRU algorithm in the folder [/problem_lc](/problem_lc). 
+Testing functions are also written. The first is to check the correctness of the program. The second one is for comparison with other caching algorithms, in particular with the usual LRU.
 
-The section will be finalized later...
+The main cache function returns 0 if miss and 1 if hit. It is also possible to receive information about which page to close. See a more detailed description in [/include/cache.h](/include/cache.h).
 
 ## Usage:
 To install this repository tap in your console:
 ```
 $ git clone git@github.com:UsoltsevI/Cache.git
 ```
-
+To create cache LRU-K library:
+```
+// The section will be finalized later...
+```
+## Test results:
 The section will be finalized later...
 
 ## Functions description:
+
+### Cache:
+Turn CACHE_PAGE_LINKS_ON on in order to receive information about the page that should be closed.
+
+Included files:
+* <stddef.h>
+* <stdio.h>
+* <stdlib.h>
+* "../include/cache.h"
+* "../include/list.h"
+* "../include/hash.h"
+* "../include/tree.h"
+
+Typedefs:
+```
+typedef size_t TCacheValue;
+typedef size_t TCacheTime;
+```
+
+Structures:
+```
+struct cache;
+```
+
+Functions:
+```
+// constructor
+// size == number of stored pages
+struct cache* create_cache(size_t size, size_t k);
+
+// updates cache
+// adds a link to the page to be closed to to_close
+// returns 0 if miss
+// returns 1 if hit
+int cache(struct cache* cch
+            , const TCacheValue* page
+            , TCacheTime time
+#ifdef CACHE_PAGE_LINKS_ON
+            , TCacheValue* to_close
+#endif
+            );
+
+// destructor
+void delete_cache(struct cache* cch);
+```
+
 ### Tree:
 Included files:
 * <stdio.h>
 * <stdlib.h>
-* ["/include/list.h"](/include/list.h)
+* ["/include/cache.h"](/include/list.h)
 
 Typedefs:
 ```
 typedef List* TTreeContent;
 typedef size_t TTreeValue;
-typedef struct tree Tree;
+typedef struct tree TTree;
 ```
 
 Structures:
@@ -49,7 +100,6 @@ TTreeContent tree_delete_max(Tree* tree);
 
 void delete_tree(Tree* tree);
 ```
-
 
 ## Useful links:
 * [Cache replacement policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
