@@ -25,7 +25,7 @@ int get_value(Node* node);
 
 struct node {
     struct node* next;
-    struct node* prev; 
+    struct node* prev;
     size_t val;
 };
 
@@ -52,11 +52,11 @@ List* create_list (size_t number_of_elements){
         list_temp->next->prev = list_temp;
         list_temp->next->val = LISTGARBAGE;
 
-        list_temp = list_temp->next;  
+        list_temp = list_temp->next;
     }
 
     list->tail = list_temp;
-    
+
     list->tail->next = list->head;
     list->head->prev = list->tail;
 
@@ -80,11 +80,11 @@ void move_to_head(List* list, Node* new_head) {
     if (new_head == NULL) {
         return;
     }
-    
+
     if (new_head == list->head) {
         return;
     }
-    
+
     if (new_head == list->tail) {
         list->head = new_head;
         list->tail = new_head->prev;
@@ -146,9 +146,9 @@ typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition
 
 // creates a list with specified size and returns the link to it
-TMap* create_table(size_t size);
+TMap* create_table_LRU(size_t size);
 
-void delete_table(TMap* table);
+void delete_table_LRU(TMap* table);
 
 // adds node with value (key == value)
 void add_value(TMap* table, THashContent cont, THashValue value);
@@ -186,7 +186,7 @@ static void delete_chain(t_node* head);
 
 static void push_node(t_node* head, t_node* node);
 
-TMap* create_table(size_t size) {
+TMap* create_table_LRU(size_t size) {
     t_node* cur = NULL;
     TMap* tbl = NULL;
 
@@ -227,7 +227,7 @@ static void delete_chain(t_node* head) {
     }
 }
 
-void delete_table(TMap* tbl) {
+void delete_table_LRU(TMap* tbl) {
     for (size_t i = 0; i < tbl->size; ++i) {
         delete_chain(tbl->cells[i]);
     }
@@ -239,7 +239,7 @@ void delete_table(TMap* tbl) {
 
 void add_value(TMap* table, THashContent cont, THashValue value) {
     size_t position = get_hash(table, value);
-    
+
     t_node* old_head = table->cells[position];
     table->cells[position] = table->accumulating_list;
     table->accumulating_list = table->accumulating_list->next;
@@ -324,14 +324,14 @@ typedef int CacheValueType;
 struct cache;
 
 // constructor
-struct cache* create_cache(size_t size);
+struct cache* create_cache_LRU(size_t size);
 
-// This function adds the value to cache 
+// This function adds the value to cache
 // and returns 1 if hit, 0 if miss
-int cache(struct cache* cch, CacheValueType value);
+int cache_LRU(struct cache* cch, CacheValueType value);
 
 // destructor
-void delete_cache(struct cache* cch);
+void delete_cache_LRU(struct cache* cch);
 
 struct cache {
     struct table* tbl;
@@ -339,7 +339,7 @@ struct cache {
 };
 
 // constructor
-struct cache* create_cache(size_t size) {
+struct cache* create_cache_LRU(size_t size) {
     struct cache* cch = (struct cache* ) calloc(1, sizeof(struct cache));
 
     cch->tbl = create_table(size);
@@ -348,11 +348,11 @@ struct cache* create_cache(size_t size) {
     return cch;
 }
 
-int cache(struct cache* cch, CacheValueType value) {
+int cache_LRU(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     nd = search_cell(cch->tbl, value);
-    
+
     // if the sutable cell has been founded
     // just move it to the head
     if (nd != NULL) {
@@ -373,14 +373,14 @@ int cache(struct cache* cch, CacheValueType value) {
 }
 
 // destructor
-void delete_cache(struct cache* cch) {
+void delete_cache_LRU(struct cache* cch) {
     delete_table(cch->tbl);
     delete_list(cch->lst);
     free(cch);
 }
 
 // This is the main function for the problem_LC
-// and separate compilation task. 
+// and separate compilation task.
 // You just need to copy it to LC.c before submitting.
 int main() {
     size_t m, n;
@@ -390,19 +390,19 @@ int main() {
 
     res = scanf("%lu%lu", &m, &n);
 
-    cch = create_cache(m);
+    cch = create_cache_LRU(m);
 
     for (size_t i = 0; i < n; ++i) {
         int next;
         res = scanf("%d", &next);
         // printf("ghg\n");
 
-        num_hit += cache(cch, next);
+        num_hit += cache_LRU(cch, next);
     }
 
     printf("%lu\n", num_hit);
 
-    delete_cache(cch);
+    delete_cache_LRU(cch);
 
     return 0;
 }

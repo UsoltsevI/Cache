@@ -10,7 +10,7 @@ struct cache {
 };
 
 // constructor
-struct cache* create_cache(size_t size) {
+struct cache* create_cache_LRU(size_t size) {
     struct cache* cch = (struct cache* ) calloc(1, sizeof(struct cache));
 
     cch->tbl = create_table(size);
@@ -19,13 +19,13 @@ struct cache* create_cache(size_t size) {
     return cch;
 }
 
-int cache(struct cache* cch, CacheValueType value) {
+int cache_LRU(struct cache* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     nd = search_cell(cch->tbl, value);
 
     // printf("value = %u\n", value);
-    
+
     // if the sutable cell has been founded
     // just move it to the head
     if (nd != NULL) {
@@ -57,7 +57,7 @@ int cache(struct cache* cch, CacheValueType value) {
 }
 
 // destructor
-void delete_cache(struct cache* cch) {
+void delete_cache_LRU(struct cache* cch) {
     delete_table(cch->tbl);
     delete_list(cch->lst);
     free(cch);

@@ -2,16 +2,16 @@
 #define CACHE_H_INCLUDED
 
 typedef int CacheValueType;
-struct cache;
+struct cache_LRU;
 
 // constructor
-struct cache* create_cache(size_t size);
+struct cache_LRU* create_cache_LRU(size_t size);
 
-// This function adds the value to cache 
+// This function adds the value to cache_LRU
 // and returns 1 if hit, 0 if miss
-int cache(struct cache* cch, CacheValueType value);
+int cache_LRU(struct cache_LRU* cch, CacheValueType value);
 
 // destructor
-void delete_cache(struct cache* cch);
+void delete_cache_LRU(struct cache_LRU* cch);
 
 #endif // CACHE_H_INCLUDED
