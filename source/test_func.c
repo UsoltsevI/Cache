@@ -96,6 +96,6 @@ int get_hits_LRU_K(int* arr, int size_cache, int k) {
 
     return cou;
 }
-
+//TODO: переименовать функции для LRU чтобы они не пересекались;
 
 
