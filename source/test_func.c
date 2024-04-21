@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <calloc.h>
+#include <stddef.h>
 #include <time.h>
 #include "..problem_lc/include/hash.h"
 #include "..problem_lc/include/cache.h"
 #include "..include/cache.h"
 #include "..include/hash.h"
-
 
 int* create_random_arr(int size) {
     int* arr = (int*)calloc(size, sizeof(int));
@@ -17,18 +17,15 @@ int* create_random_arr(int size) {
     return arr;
 }
 
-void delete_arr( int* arr, int size) {
-    for(int i = 0; i < size; ++i) {
-        free(arr[i]);
-    }
+void delete_arr(int* arr) {
+    free(arr);
 }
 
 double get_time_LRU(int* arr, int size_cache) {
     clock_t start, end;
     double tm = 0;
-    struct cache* cch = NULL;
+    struct cache_LRU* cch = NULL;
     int res = 0;
-
 
     cch = create_cache_LRU(size_cache);
 
@@ -50,7 +47,6 @@ double get_time_LRU_K(int* arr, int size_cache, int k) {
     struct cache* cch = NULL;
     int res = 0;
 
-
     cch = create_cache(size_cache, k);
 
     for(int i = 0; i < size_random_arr; ++i) {
@@ -66,7 +62,7 @@ double get_time_LRU_K(int* arr, int size_cache, int k) {
 }
 
 int get_hits_LRU(int* arr, int size_cache) {
-    struct cache* cch = NULL;
+    struct cache_LRU* cch = NULL;
     int res = 0, cou = 0;
 
     cch = create_cache_LRU(size_cache);
@@ -85,7 +81,7 @@ int get_hits_LRU_K(int* arr, int size_cache, int k) {
     struct cache* cch = NULL;
     int res = 0, cou = 0;
 
-    cch = create_cache_LRU(size_cache);
+    cch = create_cache_LRU(size_cache, k);
 
     for(int i = 0; i < size_random_arr; ++i) {
         res = cache_LRU(cch, arr[i]);
@@ -96,6 +92,5 @@ int get_hits_LRU_K(int* arr, int size_cache, int k) {
 
     return cou;
 }
-//TODO: переименовать функции для LRU чтобы они не пересекались;
 
 

@@ -3,7 +3,7 @@
 
 int* create_random_arr(int size);
 
-void delete_arr( int* arr, int size);
+void delete_arr(int* arr);
 
 double get_time_LRU(int* arr, int size_cache);
 

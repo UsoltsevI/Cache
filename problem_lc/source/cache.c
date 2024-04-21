@@ -4,14 +4,14 @@
 #include "../include/hash.h"
 #include "../include/cache.h"
 
-struct cache {
+struct cache_LRU {
     struct table* tbl;
     struct list* lst;
 };
 
 // constructor
-struct cache* create_cache_LRU(size_t size) {
-    struct cache* cch = (struct cache* ) calloc(1, sizeof(struct cache));
+struct cache_LRU* create_cache_LRU(size_t size) {
+    struct cache_LRU* cch = (struct cache_LRU* ) calloc(1, sizeof(struct cache_LRU));
 
     cch->tbl = create_table(size);
     cch->lst = create_list(size);
@@ -19,7 +19,7 @@ struct cache* create_cache_LRU(size_t size) {
     return cch;
 }
 
-int cache_LRU(struct cache* cch, CacheValueType value) {
+int cache_LRU(struct cache_LRU* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     nd = search_cell(cch->tbl, value);
@@ -57,7 +57,7 @@ int cache_LRU(struct cache* cch, CacheValueType value) {
 }
 
 // destructor
-void delete_cache_LRU(struct cache* cch) {
+void delete_cache_LRU(struct cache_LRU* cch) {
     delete_table(cch->tbl);
     delete_list(cch->lst);
     free(cch);

@@ -321,26 +321,26 @@ void print_hash_table(const TMap* table) {
 }
 
 typedef int CacheValueType;
-struct cache;
+struct cache_LRU;
 
 // constructor
-struct cache* create_cache_LRU(size_t size);
+struct cache_LRU* create_cache_LRU(size_t size);
 
-// This function adds the value to cache
+// This function adds the value to cache_LRU
 // and returns 1 if hit, 0 if miss
-int cache_LRU(struct cache* cch, CacheValueType value);
+int cache_LRU(struct cache_LRU* cch, CacheValueType value);
 
 // destructor
-void delete_cache_LRU(struct cache* cch);
+void delete_cache_LRU(struct cache_LRU* cch);
 
-struct cache {
+struct cache_LRU {
     struct table* tbl;
     struct list* lst;
 };
 
 // constructor
-struct cache* create_cache_LRU(size_t size) {
-    struct cache* cch = (struct cache* ) calloc(1, sizeof(struct cache));
+struct cache_LRU* create_cache_LRU(size_t size) {
+    struct cache_LRU* cch = (struct cache_LRU* ) calloc(1, sizeof(struct cache_LRU));
 
     cch->tbl = create_table(size);
     cch->lst = create_list(size);
@@ -348,7 +348,7 @@ struct cache* create_cache_LRU(size_t size) {
     return cch;
 }
 
-int cache_LRU(struct cache* cch, CacheValueType value) {
+int cache_LRU(struct cache_LRU* cch, CacheValueType value) {
     struct node* nd; // C90 style, but problem_LC requires it...
 
     nd = search_cell(cch->tbl, value);
@@ -373,7 +373,7 @@ int cache_LRU(struct cache* cch, CacheValueType value) {
 }
 
 // destructor
-void delete_cache_LRU(struct cache* cch) {
+void delete_cache_LRU(struct cache_LRU* cch) {
     delete_table(cch->tbl);
     delete_list(cch->lst);
     free(cch);
@@ -385,7 +385,7 @@ void delete_cache_LRU(struct cache* cch) {
 int main() {
     size_t m, n;
     size_t num_hit = 0;
-    struct cache* cch;
+    struct cache_LRU* cch;
     int res = 0;
 
     res = scanf("%lu%lu", &m, &n);
