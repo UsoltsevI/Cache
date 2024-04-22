@@ -41,7 +41,7 @@ List* create_list (size_t number_of_elements){
     list->tail->next = list->head;
     list->head->prev = list->tail;
 
-    list->fact_tail = list->head;
+    list->fact_tail = list->tail;
 
     return list;
 }
@@ -74,6 +74,9 @@ void list_move_to_head(List* list, Node* new_head) {
         return;
     }
 
+    if (new_head == list->fact_tail)
+        list->fact_tail = new_head->prev;
+
     new_head->prev->next = new_head->next;
     new_head->next->prev = new_head->prev;
 
@@ -99,7 +102,7 @@ Node* list_get_head(List* list) {
 }
 
 Node* list_get_tail(List* list) {
-    return list->tail;
+    return list->fact_tail;
 }
 
 TListValue list_get_value(Node* node) {
@@ -111,6 +114,16 @@ void list_set_value (Node* node, TListValue value) {
 }
 
 void list_clean(List* list) {
+    Node* temp = list->head;
+    Node* to_free;
+
+    for (size_t i = 0; i < list->size; ++i) {
+        to_free = temp;
+        temp = temp->next;
+        to_free->val = LISTGARBAGE;
+    }
+
+    list->fact_tail = list->tail;
 
 }
 
