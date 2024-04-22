@@ -27,6 +27,8 @@ Node* list_get_head(List* list);
 
 Node* list_get_tail(List* list);
 
+void list_clean(List* list);
+
 void list_set_value (Node* node, TListValue value);
 
 TListValue list_get_value(Node* node);

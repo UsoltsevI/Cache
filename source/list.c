@@ -11,7 +11,8 @@ struct node {
 
 struct list {
     struct node* head;
-    struct node* tail;
+    struct node* tail;                                              
+    struct node* fact_tail;
     size_t size;
 };
 
@@ -39,6 +40,8 @@ List* create_list (size_t number_of_elements){
     
     list->tail->next = list->head;
     list->head->prev = list->tail;
+
+    list->fact_tail = list->head;
 
     return list;
 }
@@ -105,6 +108,10 @@ TListValue list_get_value(Node* node) {
 
 void list_set_value (Node* node, TListValue value) {
     node->val = value;
+}
+
+void list_clean(List* list) {
+
 }
 
 void list_list_dump(List* list) {
