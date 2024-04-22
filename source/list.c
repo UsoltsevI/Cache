@@ -56,7 +56,7 @@ void delete_list (List* list) {
     free(list);
 }
 
-void move_to_head(List* list, Node* new_head) {
+void list_move_to_head(List* list, Node* new_head) {
     if (new_head == NULL) {
         return;
     }
@@ -83,7 +83,7 @@ void move_to_head(List* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* add_to_head(List* list, TListValue val) {
+Node* list_add_to_head(List* list, TListValue val) {
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -91,19 +91,23 @@ Node* add_to_head(List* list, TListValue val) {
     return list->head;
 }
 
-Node* get_head(List* list) {
+Node* list_get_head(List* list) {
     return list->head;
 }
 
-Node* get_tail(List* list) {
+Node* list_get_tail(List* list) {
     return list->tail;
 }
 
-TListValue get_value(Node* node) {
+TListValue list_get_value(Node* node) {
     return node->val;
 }
 
-void list_dump(List* list) {
+void list_set_value (Node* node, TListValue value) {
+    node->val = value;
+}
+
+void list_list_dump(List* list) {
     Node* list_temp = list->head;
 
     for (size_t i = 0; i < list->size; ++i) {
