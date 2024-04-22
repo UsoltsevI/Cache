@@ -6,7 +6,7 @@
 struct node {
     struct node* next;
     struct node* prev; 
-    size_t val;
+    TListValue val;
 };
 
 struct list {
@@ -83,7 +83,7 @@ void move_to_head(List* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* add_to_head(List* list, int val) {
+Node* add_to_head(List* list, TListValue val) {
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -99,7 +99,7 @@ Node* get_tail(List* list) {
     return list->tail;
 }
 
-int get_value(Node* node) {
+TListValue get_value(Node* node) {
     return node->val;
 }
 

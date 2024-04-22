@@ -1,6 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 #include <stddef.h>
+#include "cache.h"
+
+typedef TCacheValue TListValue;
 
 struct node;
 
@@ -16,7 +19,7 @@ void move_to_head(List* list, Node* new_head);
 
 void delete_list(List* list);
 
-Node* add_to_head(List* list, int val);
+Node* add_to_head(List* list, TListValue val);
 
 void list_dump (List* list);
 
@@ -24,6 +27,6 @@ Node* get_head(List* list);
 
 Node* get_tail(List* list);
 
-int get_value(Node* node);
+TListValue get_value(Node* node);
 
 #endif // LIST_H
