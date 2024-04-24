@@ -6,7 +6,6 @@
 struct node {
     struct node* next;
     struct node* prev; 
-    TListValue val;
 };
 
 struct list {
@@ -16,8 +15,6 @@ struct list {
     size_t size;
 };
 
-const int LISTGARBAGE = -1;
-
 List* create_list (size_t number_of_elements){
     List* list = (List*) calloc(1, sizeof(List));
     Node* list_temp;
@@ -26,11 +23,9 @@ List* create_list (size_t number_of_elements){
 
     list->head = (Node*) calloc(1, sizeof(Node));
     list_temp = list->head;
-    list_temp->val = LISTGARBAGE;
 
     for (size_t i = 0; i < number_of_elements - 1; i++) {
         list_temp->next = (Node*) calloc(1, sizeof(Node));
-        list_temp->next->val = LISTGARBAGE;
         list_temp->next->prev = list_temp;
 
         list_temp = list_temp->next;  
@@ -89,8 +84,7 @@ void list_move_to_head(List* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* list_add_to_head(List* list, TListValue val) {
-    list->tail->val = val;
+Node* list_add_to_head(List* list) {
     list->head = list->tail;
     list->tail = list->tail->prev;
 
@@ -105,13 +99,6 @@ Node* list_get_tail(List* list) {
     return list->fact_tail;
 }
 
-TListValue list_get_value(Node* node) {
-    return node->val;
-}
-
-void list_set_value (Node* node, TListValue value) {
-    node->val = value;
-}
 
 void list_clean(List* list) {
     Node* temp = list->head;
@@ -120,20 +107,18 @@ void list_clean(List* list) {
     for (size_t i = 0; i < list->size; ++i) {
         to_free = temp;
         temp = temp->next;
-        to_free->val = LISTGARBAGE;
     }
 
     list->fact_tail = list->tail;
 
 }
 
-void list_list_dump(List* list) {
-    Node* list_temp = list->head;
+// void list_list_dump(List* list) {
+//     Node* list_temp = list->head;
 
-    for (size_t i = 0; i < list->size; ++i) {
-        printf("%ld ->", list_temp->val);
-        list_temp = list_temp->next;
-    }
+//     for (size_t i = 0; i < list->size; ++i) {  // ×ÒÎ ÏÅ×ÀÒÀÒÜ ÒÎ?
+//         list_temp = list_temp->next;
+//     }
 
-    printf("NULL\n");
-}
+//     printf("NULL\n");
+// }

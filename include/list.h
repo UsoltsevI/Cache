@@ -3,8 +3,6 @@
 #include <stddef.h>
 #include "cache.h"
 
-typedef TCacheValue TListValue;
-
 struct node;
 
 struct list;
@@ -19,7 +17,7 @@ void list_move_to_head(List* list, Node* new_head);
 
 void delete_list(List* list);
 
-Node* list_add_to_head(List* list, TListValue val);
+Node* list_add_to_head(List* list);
 
 void list_dump (List* list);
 
@@ -28,9 +26,5 @@ Node* list_get_head(List* list);
 Node* list_get_tail(List* list);
 
 void list_clean(List* list);
-
-void list_set_value (Node* node, TListValue value);
-
-TListValue list_get_value(Node* node);
 
 #endif // LIST_H
