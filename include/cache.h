@@ -9,6 +9,7 @@ typedef size_t TCacheValue;
 typedef size_t TCacheTime;
 
 struct cache;
+typedef struct _history THist;
 
 // constructor
 // size == number of stored pages

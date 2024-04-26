@@ -6,9 +6,9 @@
 #include "../include/list.h"
 #include "../include/cache.h"
 
-typedef List* THashContent; // == Hash Content Type
+typedef THist* THashContent; // == Hash Content Type
 
-typedef TCacheValue THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
+typedef TCacheTime THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
 
 typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition

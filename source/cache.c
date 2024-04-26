@@ -5,8 +5,13 @@
 #include "../include/hash.h"
 #include "../include/tree.h"
 
+struct _history {
+    List* list;
+    TCacheValue page;
+};
+
 typedef struct cache {
-    List** lists;
+    THist* histories;
     TMap* table;
     TTree* tree;
     size_t cur_lst;
@@ -22,10 +27,10 @@ Cache* create_cache(size_t size, size_t k) {
 
     cch->table = create_table(cch->size);
     cch->tree  = create_tree (cch->size);
-    cch->lists = (List**) calloc(cch->size, sizeof(List*));
+    cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
     for (size_t i = 0; i < cch->size; ++i) {
-        cch->lists[i] = create_list(cch->k);
+        cch->histories[i].list = create_list(cch->k);
     }
 
     cch->cur_lst = 0;
@@ -43,27 +48,27 @@ int cache(struct cache* cch
 
 #ifdef CACHE_PAGE_LINKS_ON
     if (page == NULL || to_close == NULL) {
-        fprintf(stderr, "NULL argument in the file %s
-                        , in the function %s
-                        , on the line %d\n", __FILE__
+        fprintf(stderr, "NULL argument in the file %s"
+                        ", in the function %s"
+                        ", on the line %d\n", __FILE__
                         , __func__, __LINE__);
         return 0;
     }
 #endif
 
     // we are looking among the open pages
-    List* lst = table_search_cell(cch->table, page);
+    THist* hst = table_search_cell(cch->table, *page);
     
     // if the lst is found, then we update 
     // the information in the cch->list and in the cch->tree
-    if (lst != NULL) {
+    if (hst != NULL) {
         // hit!
         // deleting the cell from the cch->tree
-        tree_delete_node(cch->tree, list_get_value(list_get_tail(lst)));
+        tree_delete_node(cch->tree, list_get_value(list_get_tail(hst->list)));
         // adding the new page to the head of the list
-        list_add_to_head(lst, time);
+        list_add_to_head(hst->list, time);
         // adding the new tail to the ссh->tree
-        tree_add_value(cch->tree, lst, list_get_value(list_get_tail(lst)));
+        tree_add_value(cch->tree, hst->list, list_get_value(list_get_tail(hst->list)));
 
 #ifdef CACHE_PAGE_LINKS_ON
         // there is no need to close anything
@@ -79,28 +84,28 @@ int cache(struct cache* cch
         // if there are no free ones left, 
         // then we remove the minimum value from the cch->tree,
         // and in its place we will write the next value
-        List* del = tree_delete_min(cch->tree);
+        THist* del = tree_delete_min(cch->tree);
         // deleting the list from the cch->table
-        table_delete_cell(del, list_get_main_value(del));
+        table_delete_cell(cch->table, del->page);
 
 #ifdef CACHE_PAGE_LINKS_ON
         // writing down the value of the closed page
-        *to_close = list_get_main_value(del);
+        *to_close = del->page
 #endif
 
         // deleting elements from list
-        list_clean(del);
-        list_set_main_value(del, page);
-        table_add_value(cch->table, del, page);
-        list_add_to_head(del, time);
+        list_clean(del->list);
+        del->page = page;
+        table_add_value(cch->table, del, *page);
+        list_add_to_head(del->list, time);
         tree_add_value(cch->tree, del, time);
 
     } else {
         // if there are still free lists left, 
         // just write them down there
-        list_set_main_value(cch->lists[cch->cur_lst], page);
-        table_add_value(cch->table, cch->lists[cch->cur_lst], page);
-        tree_add_value (cch->tree, cch->lists[cch->cur_lst], time);
+        cch->histories[cch->cur_lst].page = page;
+        table_add_value(cch->table, &cch->histories[cch->cur_lst], *page);
+        tree_add_value (cch->tree, cch->histories[cch->cur_lst].list, time);
         cch->cur_lst += 1;
 
 #ifdef CACHE_PAGE_LINKS_ON
@@ -116,9 +121,9 @@ void delete_cache(Cache* cch) {
     delete_tree (cch->tree);
 
     for (size_t i = 0; i < cch->size; ++i) {
-        delete_list(cch->lists[i]);
+        delete_list(cch->histories[i].list);
     }
 
-    free(cch->lists);
+    free(cch->histories);
     free(cch);
 }
