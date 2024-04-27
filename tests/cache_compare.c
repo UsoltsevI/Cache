@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
-#define DEFAULT_FILE "/test/results/res_compare.csv"
+#define DEFAULT_FILE "res_compare.csv"
 
 int* create_random_arr(size_t size);
 
