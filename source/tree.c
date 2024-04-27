@@ -406,7 +406,7 @@ node tree_delete_min (rbtree t) {
     node res = NULL;
     memcpy(res, min, sizeof(node));
 
-    rbtree_delete(t, min, compare_time);
+    rbtree_delete(t, min->key, compare_time);
     return res;
 }
 
