@@ -33,8 +33,9 @@ static void delete_case4 (rbtree t, node n);
 static void delete_case5 (rbtree t, node n);
 static void delete_case6 (rbtree t, node n);
 
+static void tree_search_min (node n, node* min);
 
-int compare_int(void* leftp, void* rightp) {
+int compare_time(void* leftp, void* rightp) {
     time left = *(time*)leftp;
     time right = *(time*)rightp;
     if (left < right) 
@@ -394,5 +395,30 @@ void delete_case6 (rbtree t, node n) {
         assert (node_color(sibling(n)->left) == RED);
         sibling(n)->left->color = BLACK;
         rotate_right(t, n->parent);
+    }
+}
+
+node tree_delete_min (rbtree t) {
+    node min = t->root;
+    tree_search_min(t->root, &min);
+    
+    node res = NULL;
+    memcpy(res, min, sizeof(node));
+
+    rbtree_delete(t, min, compare_time);
+    return res;
+}
+
+void tree_search_min (node n, node* min)
+{
+    if (compare_time((*min)->key, n->key) == -1)
+        *min  = n;
+
+    if (n->left != NULL) {
+        tree_search_min(n->left, min);
+    }
+
+    if (n->right != NULL) {
+        tree_search_min(n->right, min);
     }
 }

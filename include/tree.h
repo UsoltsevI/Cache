@@ -32,7 +32,9 @@ void rbtree_insert (rbtree t, TTreeContent data, void* key, compare_func compare
 
 void rbtree_delete (rbtree t, void* key, compare_func compare);
 
-int compare_int(void* leftp, void* rightp);
+int compare_time(void* leftp, void* rightp);
+
+node tree_delete_min (rbtree t);
 
 typedef rbtree_node node;
 typedef enum rbtree_node_color color;
