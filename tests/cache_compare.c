@@ -83,8 +83,8 @@ int main(int argc, char* argv[]) {
     for(int t = 0; t < n; ++t) {
         printf("write length and k\n");
         scanf("%i %i", &opt[t * 2], &opt[t * 2 + 1]);
-        fprintf(fl, "LRU_K-%i time  (len = %i K = %i), ", t, opt[t * 2], opt[t * 2 + 1]);
-        fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t, opt[t * 2], opt[t * 2 + 1]);
+        fprintf(fl, "LRU_K-%i time  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
+        fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
     }
     fprintf(fl,"\n");
 
