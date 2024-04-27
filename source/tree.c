@@ -410,10 +410,9 @@ node tree_delete_min (rbtree t) {
     return res;
 }
 
-void tree_search_min (node n, node* min)
-{
+void tree_search_min (node n, node* min) {
     if (compare_time((*min)->key, n->key) == -1)
-        *min  = n;
+        *min = n;
 
     if (n->left != NULL) {
         tree_search_min(n->left, min);
