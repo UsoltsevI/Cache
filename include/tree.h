@@ -32,4 +32,6 @@ typedef enum rbtree_node_color color;
 
 TTreeKey tree_delete_min (rbtree t);
 
+void rbtree_clean (node t);
+
 #endif // TREE_H

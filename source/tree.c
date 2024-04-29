@@ -432,3 +432,14 @@ void tree_search_min (node n, node* min) {
         tree_search_min(n->right, min);
     }
 }
+
+void rbtree_clean (node t)
+{
+    if (t->left != NULL)
+        rbtree_clean(t->left);
+
+    if (t->right != NULL)
+        rbtree_clean(t->right);
+
+    free(t);
+}
