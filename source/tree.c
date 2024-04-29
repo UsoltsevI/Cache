@@ -3,6 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct rbtree_node_t {
+    void* key;
+    struct rbtree_node_t* left;
+    struct rbtree_node_t* right;
+    struct rbtree_node_t* parent;
+    enum rbtree_node_color color;
+};
+
+struct rbtree_t {
+    rbtree_node root;
+};
 
 static node grandparent (node n);
 static node sibling (node n);
@@ -15,7 +26,7 @@ static void property_4 (node root);
 static void property_5 (node root);
 static void property_5_helper (node n, int black_count, int* black_count_path);
 
-static node new_node (TTreeContent data, void* key , color node_color, node left, node right);
+static node new_node (void* key , color node_color, node left, node right);
 static node lookup_node (rbtree t, void* key, compare_func compare);
 static void rotate_left (rbtree t, node n);
 static void rotate_right (rbtree t, node n);
@@ -133,9 +144,8 @@ rbtree rbtree_create () {
     return t;
 }
 
-node new_node (TTreeContent data, void* key , color node_color, node left, node right) {
+node new_node (void* key , color node_color, node left, node right) {
     node result = malloc(sizeof(struct rbtree_node_t));
-    result->data = data;
     result->key = key;
     result->color = node_color;
     result->left = left;
@@ -203,8 +213,8 @@ void replace_node (rbtree t, node oldn, node newn) {
     }
 }
 
-void rbtree_insert (rbtree t, TTreeContent data, void* key, compare_func compare) {
-    node inserted_node = new_node(data, key, RED, NULL, NULL);
+void rbtree_insert (rbtree t, void* key, compare_func compare) {
+    node inserted_node = new_node(key, RED, NULL, NULL);
     if (t->root == NULL) {
         t->root = inserted_node;
     } else {
