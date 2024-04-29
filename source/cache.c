@@ -178,4 +178,8 @@ void delete_cache(TCache* cch) {
 
         printf("\n");
     }
+
+    TCacheTime hist_get_time(THist* hist) {
+        return hist->time;
+    }
 #endif
