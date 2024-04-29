@@ -32,6 +32,7 @@ void delete_cache(struct cache* cch);
 #ifdef CACHE_DEBUGON
     void hist_dump(THist* hist);
     void cache_dump(struct cache* cch);
+    TCacheTime hist_get_time(THist* hist);
 #endif
 
 #endif // CACHE_H

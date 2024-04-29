@@ -34,4 +34,6 @@ TTreeKey tree_delete_min (rbtree t, compare_func compare);
 
 void rbtree_clean (rbtree t);
 
+void draw_tree (rbtree tree);
+
 #endif // TREE_H

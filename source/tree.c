@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 struct rbtree_node_t {
     TTreeKey key;
@@ -9,6 +10,8 @@ struct rbtree_node_t {
     struct rbtree_node_t* right;
     struct rbtree_node_t* parent;
     enum rbtree_node_color color;
+
+    int num_in_tree;
 };
 
 struct rbtree_t {
@@ -46,6 +49,10 @@ static void delete_case5 (rbtree t, node n);
 static void delete_case6 (rbtree t, node n);
 
 static void tree_search_min (node n, node* min, compare_func compare);
+
+void draw_tree_1 (FILE* save, node tree, int* node_num);
+
+void draw_tree_2 (FILE* save, node tree);
 
 void rbtree_clean_ (node t);
 
@@ -152,6 +159,9 @@ node new_node (TTreeKey key , color node_color, node left, node right) {
     result->color = node_color;
     result->left = left;
     result->right = right;
+
+    result->num_in_tree = 0;
+
     if (left  != NULL)  left->parent = result;
     if (right != NULL) right->parent = result;
     result->parent = NULL;
@@ -449,4 +459,63 @@ void rbtree_clean_ (node t) {
         rbtree_clean_(t->right);
 
     free(t);
+}
+
+void draw_tree (rbtree tree)
+{
+    FILE* save = fopen("drawTree.txt", "wb");
+
+    fprintf(save, "digraph Tree {\n");
+
+    int node_num = 0;
+    draw_tree_1(save, tree->root, &node_num);
+    draw_tree_2(save, tree->root);
+
+    fprintf(save, "}");
+
+    fclose(save);
+
+    system("iconv -f WINDOWS-1251 -t UTF-8 drawTree.txt > buffer.txt");
+    system("dot buffer.txt -Tpng -o drawTree.png");
+    system("start drawTree.png");
+}
+
+void draw_tree_1 (FILE* save, node tree, int* node_num)
+{
+    tree->num_in_tree = *node_num;
+
+    if (tree->color == BLACK)
+        fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = black, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_time(tree->key), '"');
+    else if (tree->color == RED)
+        fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = red, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_time(tree->key), '"');
+
+    if (tree->left != NULL)
+    {
+        *node_num += 1;
+        draw_tree_1(save, tree->left, node_num);
+    }
+
+    if (tree->right != NULL)
+    {
+        *node_num += 1;
+        draw_tree_1(save, tree->right, node_num);
+    }
+
+    return;
+}
+
+void draw_tree_2 (FILE* save, node tree)
+{
+    if (tree->left != NULL)
+    {
+        fprintf(save, "    %d -> %d;\n", tree->num_in_tree, (tree->left)->num_in_tree);
+        draw_tree_2(save, tree->left);
+    }
+
+    if (tree->right != NULL)
+    {
+        fprintf(save, "    %d -> %d;\n", tree->num_in_tree, (tree->right)->num_in_tree);
+        draw_tree_2(save, tree->right);
+    }
+    return;
 }
