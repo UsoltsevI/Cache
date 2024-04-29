@@ -19,8 +19,12 @@ int main() {
         res = scanf("%lu", &next);
         // printf("ghg\n");
 
-        num_hit += cache(cch, next, i);
-        // printf("%lu\n", num_hit);
+        size_t last = cache(cch, next, i);
+        printf("%lu: %lu: %lu\n", i, next, last);
+        num_hit += last;
+#ifdef CACHE_DEBUGON
+        cache_dump(cch);
+#endif
     }
 
     printf("%lu\n", num_hit);

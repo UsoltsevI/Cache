@@ -18,8 +18,8 @@ struct list {
 
 const int LISTGARBAGE = -1;
 
-List* create_list (size_t number_of_elements){
-    List* list = (List*) calloc(1, sizeof(List));
+TList* create_list (size_t number_of_elements){
+    TList* list = (TList*) calloc(1, sizeof(TList));
     Node* list_temp;
 
     list->size = number_of_elements;
@@ -46,7 +46,7 @@ List* create_list (size_t number_of_elements){
     return list;
 }
 
-void delete_list (List* list) {
+void delete_list (TList* list) {
     Node* temp = list->head;
     Node* to_free;
 
@@ -59,7 +59,7 @@ void delete_list (List* list) {
     free(list);
 }
 
-void list_move_to_head(List* list, Node* new_head) {
+void list_move_to_head(TList* list, Node* new_head) {
     if (new_head == NULL) {
         return;
     }
@@ -89,7 +89,7 @@ void list_move_to_head(List* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* list_add_to_head(List* list, TListValue val) {
+Node* list_add_to_head(TList* list, TListValue val) {
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -97,11 +97,11 @@ Node* list_add_to_head(List* list, TListValue val) {
     return list->head;
 }
 
-Node* list_get_head(List* list) {
+Node* list_get_head(TList* list) {
     return list->head;
 }
 
-Node* list_get_tail(List* list) {
+Node* list_get_tail(TList* list) {
     return list->fact_tail;
 }
 
@@ -113,7 +113,7 @@ void list_set_value (Node* node, TListValue value) {
     node->val = value;
 }
 
-void list_clean(List* list) {
+void list_clean(TList* list) {
     Node* temp = list->head;
     Node* to_free;
 
@@ -127,7 +127,7 @@ void list_clean(List* list) {
 
 }
 
-void list_list_dump(List* list) {
+void list_dump(TList* list) {
     Node* list_temp = list->head;
 
     for (size_t i = 0; i < list->size; ++i) {

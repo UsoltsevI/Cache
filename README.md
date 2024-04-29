@@ -73,7 +73,7 @@ Included files:
 
 Typedefs:
 ```
-typedef List* TTreeContent;
+typedef TList* TTreeContent;
 typedef size_t TTreeValue;
 typedef struct tree TTree;
 ```

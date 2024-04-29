@@ -5,11 +5,10 @@
 
 // TCacheValue == page link type
 typedef size_t TCacheValue;
-
 typedef size_t TCacheTime;
 
-struct cache;
-typedef struct _history THist;
+typedef struct cache TCache;
+typedef struct history THist;
 
 typedef struct hist_last_time THistLastTime;
 
@@ -31,5 +30,11 @@ int cache(struct cache* cch
 
 // destructor
 void delete_cache(struct cache* cch);
+
+#define CACHE_DEBUGON
+#ifdef CACHE_DEBUGON
+void hist_dump(THist* hist);
+void cache_dump(struct cache* cch);
+#endif
 
 #endif // CACHE_H

@@ -5,20 +5,20 @@
 #include "../include/hash.h"
 #include "../include/tree.h"
 
-struct _history {
-    List* list;
+struct history {
+    TList* list;
     TCacheValue page;
     TCacheTime time;
 };
 
-typedef struct cache {
+struct cache {
     THist* histories;
     TMap* table;
     rbtree tree;
     size_t cur_lst;
     size_t size;
     size_t k;
-} Cache;
+};
 
 int compare_hist_time(void* first, void* second) {
     THist* first_struct  = (THist*) first;
@@ -34,8 +34,8 @@ int compare_hist_time(void* first, void* second) {
     return 0;
 }
 
-Cache* create_cache(size_t size, size_t k) {
-    Cache* cch = (Cache*) calloc(1, sizeof(Cache));
+TCache* create_cache(size_t size, size_t k) {
+    TCache* cch = (TCache*) calloc(1, sizeof(TCache));
 
     cch->size = size;
     cch->k    = k;
@@ -54,7 +54,7 @@ Cache* create_cache(size_t size, size_t k) {
     return cch;
 }
 
-int cache(struct cache* cch
+int cache(TCache* cch
             , const TCacheValue page
             , TCacheTime time
 #ifdef CACHE_PAGE_LINKS_ON
@@ -118,7 +118,7 @@ int cache(struct cache* cch
 
         table_add_value(cch->table, del, page);
         list_add_to_head(del->list, del->time);
-        rbtree_insert (cch->tree, del, &compare_hist_time);
+        rbtree_insert(cch->tree, del, &compare_hist_time);
 
     } else {
         // if there are still free lists left, 
@@ -127,8 +127,9 @@ int cache(struct cache* cch
         cch->histories[cch->cur_lst].time = time;
 
         table_add_value(cch->table, &cch->histories[cch->cur_lst], page);
-        rbtree_insert (cch->tree, &cch->histories[cch->cur_lst], &compare_hist_time);
-        
+        rbtree_insert(cch->tree, &cch->histories[cch->cur_lst], &compare_hist_time);
+        list_add_to_head(cch->histories[cch->cur_lst].list, time);
+
         cch->cur_lst += 1;
 
 #ifdef CACHE_PAGE_LINKS_ON
@@ -139,7 +140,7 @@ int cache(struct cache* cch
     return 0;
 }
 
-void delete_cache(Cache* cch) {
+void delete_cache(TCache* cch) {
     delete_table(cch->table);
     rbtree_clean(cch->tree);
 
@@ -150,3 +151,26 @@ void delete_cache(Cache* cch) {
     free(cch->histories);
     free(cch);
 }
+
+#ifdef CACHE_DEBUGON
+void hist_dump(THist* hist) {
+    printf("hist->page = %lu\n", hist->page);
+    printf("hist->time = %lu\n", hist->time);
+    printf("hist->list = %p \n", hist->list);
+    list_dump(hist->list);
+}
+
+void cache_dump(TCache* cch) {
+    printf("Table:\n");
+    print_hash_table(cch->table);
+
+    printf("Lists:\n");
+    for (size_t i = 0; i < cch->size; ++i) {
+        hist_dump(&cch->histories[i]);
+    }
+
+    printf("Tree:\n");
+
+    printf("\n");
+}
+#endif

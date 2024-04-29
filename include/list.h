@@ -9,25 +9,25 @@ struct node;
 
 struct list;
 
-typedef struct list List;
+typedef struct list TList;
 
 typedef struct node Node;
 
-List* create_list(size_t size);
+TList* create_list(size_t size);
 
-void list_move_to_head(List* list, Node* new_head);
+void list_move_to_head(TList* list, Node* new_head);
 
-void delete_list(List* list);
+void delete_list(TList* list);
 
-Node* list_add_to_head(List* list, TListValue val);
+Node* list_add_to_head(TList* list, TListValue val);
 
-void list_dump (List* list);
+void list_dump (TList* list);
 
-Node* list_get_head(List* list);
+Node* list_get_head(TList* list);
 
-Node* list_get_tail(List* list);
+Node* list_get_tail(TList* list);
 
-void list_clean(List* list);
+void list_clean(TList* list);
 
 void list_set_value (Node* node, TListValue value);
 

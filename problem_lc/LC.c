@@ -342,7 +342,7 @@ struct cache_LRU {
 struct cache_LRU* create_cache_LRU(size_t size) {
     struct cache_LRU* cch = (struct cache_LRU* ) calloc(1, sizeof(struct cache_LRU));
 
-    cch->tbl = create_table(size);
+    cch->tbl = create_table_LRU(size);
     cch->lst = create_list(size);
 
     return cch;
@@ -374,7 +374,7 @@ int cache_LRU(struct cache_LRU* cch, CacheValueType value) {
 
 // destructor
 void delete_cache_LRU(struct cache_LRU* cch) {
-    delete_table(cch->tbl);
+    delete_table_LRU(cch->tbl);
     delete_list(cch->lst);
     free(cch);
 }
@@ -397,7 +397,11 @@ int main() {
         res = scanf("%d", &next);
         // printf("ghg\n");
 
-        num_hit += cache_LRU(cch, next);
+        size_t last = cache_LRU(cch, next);
+        printf("%lu: %lu\n", i, last);
+        num_hit += last;
+
+        list_dump(cch->lst);
     }
 
     printf("%lu\n", num_hit);
