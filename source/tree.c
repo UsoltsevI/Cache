@@ -3,6 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct rbtree_node_t {
+    void* key;
+    struct rbtree_node_t* left;
+    struct rbtree_node_t* right;
+    struct rbtree_node_t* parent;
+    enum rbtree_node_color color;
+};
+
+struct rbtree_t {
+    rbtree_node root;
+};
 
 static node grandparent (node n);
 static node sibling (node n);
