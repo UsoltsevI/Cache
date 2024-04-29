@@ -415,11 +415,12 @@ TTreeKey tree_delete_min (rbtree t, compare_func compare) {
     node min = t->root;
     tree_search_min(t->root, &min, compare);
     
-    node res = malloc(sizeof(struct rbtree_node_t));
-    memcpy(res, min, sizeof(struct rbtree_node_t));
+    // node res = malloc(sizeof(struct rbtree_node_t));
+    // memcpy(res, min, sizeof(struct rbtree_node_t));
+    TTreeKey res = min->key;
 
     rbtree_delete(t, min->key, compare);
-    return res->key;
+    return res;
 }
 
 void tree_search_min (node n, node* min, compare_func compare) {

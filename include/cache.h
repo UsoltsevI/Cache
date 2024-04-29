@@ -22,7 +22,7 @@ struct cache* create_cache(size_t size, size_t k);
 // returns 0 if miss
 // returns 1 if hit
 int cache(struct cache* cch
-            , const TCacheValue* page
+            , const TCacheValue page
             , TCacheTime time
 #ifdef CACHE_PAGE_LINKS_ON
             , TCacheValue* to_close

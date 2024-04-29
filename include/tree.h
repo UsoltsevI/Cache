@@ -5,7 +5,7 @@
 
 // typedef THist* TTreeContent;
 
-typedef THistLastTime* TTreeKey;
+typedef THist* TTreeKey;
 
 typedef double time;
 

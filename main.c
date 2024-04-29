@@ -19,7 +19,8 @@ int main() {
         res = scanf("%lu", &next);
         // printf("ghg\n");
 
-        num_hit += cache(cch, &next, i);
+        num_hit += cache(cch, next, i);
+        // printf("%lu\n", num_hit);
     }
 
     printf("%lu\n", num_hit);

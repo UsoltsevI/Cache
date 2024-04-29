@@ -8,10 +8,6 @@
 struct _history {
     List* list;
     TCacheValue page;
-};
-
-struct hist_last_time {
-    THist* page;
     TCacheTime time;
 };
 
@@ -25,10 +21,17 @@ typedef struct cache {
 } Cache;
 
 int compare_hist_time(void* first, void* second) {
-    THistLastTime* first_struct  = (THistLastTime*) first;
-    THistLastTime* second_struct = (THistLastTime*) second;
+    THist* first_struct  = (THist*) first;
+    THist* second_struct = (THist*) second;
 
-    return first_struct->time - second_struct->time;
+    if (first_struct->time < second_struct->time) {
+        return -1;
+
+    } else if (first_struct->time < second_struct->time) {
+        return 1;
+    }
+
+    return 0;
 }
 
 Cache* create_cache(size_t size, size_t k) {
@@ -52,7 +55,7 @@ Cache* create_cache(size_t size, size_t k) {
 }
 
 int cache(struct cache* cch
-            , const TCacheValue* page
+            , const TCacheValue page
             , TCacheTime time
 #ifdef CACHE_PAGE_LINKS_ON
             , TCacheValue* to_close
@@ -70,22 +73,19 @@ int cache(struct cache* cch
 #endif
 
     // we are looking among the open pages
-    THist* hst = table_search_cell(cch->table, *page);
+    THist* hst = table_search_cell(cch->table, page);
     
     // if the lst is found, then we update 
     // the information in the cch->list and in the cch->tree
     if (hst != NULL) {
         // hit!
         // deleting the cell from the cch->tree
-        THistLastTime temp;
-        temp.time = list_get_value(list_get_tail(hst->list));
-        rbtree_delete(cch->tree, &temp, &compare_hist_time);
+        rbtree_delete(cch->tree, hst, &compare_hist_time);
         // adding the new page to the head of the list
         list_add_to_head(hst->list, time);
         // adding the new tail to the ссh->tree
-        temp.page = hst;
-        temp.time = list_get_value(list_get_tail(hst->list));
-        rbtree_insert(cch->tree, &temp, &compare_hist_time);
+        hst->time = list_get_value(list_get_tail(hst->list));
+        rbtree_insert(cch->tree, hst, &compare_hist_time);
 
 #ifdef CACHE_PAGE_LINKS_ON
         // there is no need to close anything
@@ -101,9 +101,9 @@ int cache(struct cache* cch
         // if there are no free ones left, 
         // then we remove the minimum value from the cch->tree,
         // and in its place we will write the next value
-        THistLastTime* del = tree_delete_min(cch->tree, &compare_hist_time);
+        THist* del = tree_delete_min(cch->tree, &compare_hist_time);
         // deleting the list from the cch->table
-        table_delete_cell(cch->table, del->page->page);
+        table_delete_cell(cch->table, del->page);
 
 #ifdef CACHE_PAGE_LINKS_ON
         // writing down the value of the closed page
@@ -111,22 +111,24 @@ int cache(struct cache* cch
 #endif
 
         // deleting elements from list
-        list_clean(del->page->list);
-        del->page->page = *page;
-        table_add_value(cch->table, del->page, *page);
-        list_add_to_head(del->page->list, time);
+        list_clean(del->list);
+
+        del->page = page;
         del->time = time;
+
+        table_add_value(cch->table, del, page);
+        list_add_to_head(del->list, del->time);
         rbtree_insert (cch->tree, del, &compare_hist_time);
 
     } else {
         // if there are still free lists left, 
         // just write them down there
-        cch->histories[cch->cur_lst].page = *page;
-        table_add_value(cch->table, &cch->histories[cch->cur_lst], *page);
-        THistLastTime temp;
-        temp.page = &cch->histories[cch->cur_lst];
-        temp.time = time;
-        rbtree_insert (cch->tree, &temp, &compare_hist_time);
+        cch->histories[cch->cur_lst].page = page;
+        cch->histories[cch->cur_lst].time = time;
+
+        table_add_value(cch->table, &cch->histories[cch->cur_lst], page);
+        rbtree_insert (cch->tree, &cch->histories[cch->cur_lst], &compare_hist_time);
+        
         cch->cur_lst += 1;
 
 #ifdef CACHE_PAGE_LINKS_ON
