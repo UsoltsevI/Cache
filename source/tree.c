@@ -437,6 +437,7 @@ void tree_search_min (node n, node* min) {
 
 void rbtree_clean (rbtree t) {
     rbtree_clean_(t->root);
+    free(t);
 }
 
 void rbtree_clean_ (node t) {

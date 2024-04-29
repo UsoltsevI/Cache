@@ -39,7 +39,7 @@ Cache* create_cache(size_t size, size_t k) {
 
     cch->table = create_table(cch->size);
     cch->tree  = rbtree_create();
-    
+
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
     for (size_t i = 0; i < cch->size; ++i) {
