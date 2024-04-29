@@ -47,6 +47,8 @@ static void delete_case6 (rbtree t, node n);
 
 static void tree_search_min (node n, node* min);
 
+void rbtree_clean_ (node t);
+
 int compare_time(void* leftp, void* rightp) {
     time left = *(time*)leftp;
     time right = *(time*)rightp;
@@ -409,14 +411,14 @@ void delete_case6 (rbtree t, node n) {
     }
 }
 
-TTreeKey tree_delete_min (rbtree t) {
+TTreeKey tree_delete_min (rbtree t, compare_func compare) {
     node min = t->root;
     tree_search_min(t->root, &min);
     
     node res = NULL;
     memcpy(res, min, sizeof(node));
 
-    rbtree_delete(t, min->key, compare_time);
+    rbtree_delete(t, min->key, compare);
     return res->key;
 }
 
@@ -433,13 +435,16 @@ void tree_search_min (node n, node* min) {
     }
 }
 
-void rbtree_clean (node t)
-{
+void rbtree_clean (rbtree t) {
+    rbtree_clean_(t->root);
+}
+
+void rbtree_clean_ (node t) {
     if (t->left != NULL)
-        rbtree_clean(t->left);
+        rbtree_clean_(t->left);
 
     if (t->right != NULL)
-        rbtree_clean(t->right);
+        rbtree_clean_(t->right);
 
     free(t);
 }
