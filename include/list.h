@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include "cache.h"
 
-typedef TCacheValue TListValue;
+typedef TCacheTime TListValue;
 
 struct node;
 

@@ -11,6 +11,8 @@ typedef size_t TCacheTime;
 struct cache;
 typedef struct _history THist;
 
+typedef struct hist_last_time* THistLastTime;
+
 // constructor
 // size == number of stored pages
 struct cache* create_cache(size_t size, size_t k);

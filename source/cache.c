@@ -13,7 +13,7 @@ struct _history {
 typedef struct cache {
     THist* histories;
     TMap* table;
-    TTree* tree;
+    rbtree tree;
     size_t cur_lst;
     size_t size;
     size_t k;
@@ -26,7 +26,8 @@ Cache* create_cache(size_t size, size_t k) {
     cch->k = k;
 
     cch->table = create_table(cch->size);
-    cch->tree  = create_tree (cch->size);
+    //cch->tree  = create_tree (cch->size);
+    cch->tree = rbtree_create();
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
     for (size_t i = 0; i < cch->size; ++i) {
@@ -64,11 +65,16 @@ int cache(struct cache* cch
     if (hst != NULL) {
         // hit!
         // deleting the cell from the cch->tree
-        tree_delete_node(cch->tree, list_get_value(list_get_tail(hst->list)));
+        TCacheTime temp = list_get_value(list_get_tail(hst->list));
+        //tree_delete_node(cch->tree, t);
+        rbtree_delete(cch->tree, &temp, &compare_time);
+
         // adding the new page to the head of the list
         list_add_to_head(hst->list, time);
         // adding the new tail to the ссh->tree
-        tree_add_value(cch->tree, hst->list, list_get_value(list_get_tail(hst->list)));
+        temp = list_get_value(list_get_tail(hst->list));
+        //tree_add_value(cch->tree, hst->list, t);
+        rbtree_insert (cch->tree, hst, &temp, &compare_time);
 
 #ifdef CACHE_PAGE_LINKS_ON
         // there is no need to close anything
@@ -95,17 +101,19 @@ int cache(struct cache* cch
 
         // deleting elements from list
         list_clean(del->list);
-        del->page = page;
+        del->page = *page;
         table_add_value(cch->table, del, *page);
         list_add_to_head(del->list, time);
-        tree_add_value(cch->tree, del, time);
+        //tree_add_value(cch->tree, del, time);
+        rbtree_insert (cch->tree, del, &time, &compare_time);
 
     } else {
         // if there are still free lists left, 
         // just write them down there
-        cch->histories[cch->cur_lst].page = page;
+        cch->histories[cch->cur_lst].page = *page;
         table_add_value(cch->table, &cch->histories[cch->cur_lst], *page);
-        tree_add_value (cch->tree, cch->histories[cch->cur_lst].list, time);
+        //tree_add_value (cch->tree, cch->histories[cch->cur_lst], time);
+        rbtree_insert (cch->tree, &cch->histories[cch->cur_lst], &time, &compare_time);
         cch->cur_lst += 1;
 
 #ifdef CACHE_PAGE_LINKS_ON
