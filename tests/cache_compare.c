@@ -97,14 +97,14 @@ int main(int argc, char* argv[]) {
         num_hits = get_hits_LRU(arr, i, opt[n * 2]);
         end = clock();
         tm = (double)(end - start) / CLOCKS_PER_SEC;
-        fprintf(fl, "%d, %i         , ", tm, num_hits);
+        fprintf(fl, "%lf, %i         , ", tm, num_hits);
 
         for(int j = 0; j < n; ++j) {
             start = clock();
             num_hits = get_hits_LRU_K(arr, i, opt[j * 2], opt[j * 2 + 1]);
             end = clock();
             tm = (double)(end - start) / CLOCKS_PER_SEC;
-            fprintf(fl, "%d     , %i             , ", tm, num_hits);
+            fprintf(fl, "%lf     , %i             , ", tm, num_hits);
         }
         
         fprintf(fl, "\n");
@@ -113,5 +113,4 @@ int main(int argc, char* argv[]) {
 
     fclose(fl);
     free(opt);
-    free(num_hits);
 }
