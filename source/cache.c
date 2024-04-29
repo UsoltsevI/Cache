@@ -8,12 +8,12 @@
 struct history {
     TList* list;
     TCacheValue page;
-    TCacheTime time;
+    TCacheTime  time;
 };
 
 struct cache {
     THist* histories;
-    TMap* table;
+    TMap*  table;
     rbtree tree;
     size_t cur_lst;
     size_t size;
@@ -75,16 +75,20 @@ int cache(TCache* cch
     // we are looking among the open pages
     THist* hst = table_search_cell(cch->table, page);
     
-    // if the lst is found, then we update 
-    // the information in the cch->list and in the cch->tree
-    if (hst != NULL) {
-        // hit!
+    if (hst != NULL) { // hit!
+        // if the lst is found, then we update 
+        // the information in the cch->list and in the cch->tree
+
         // deleting the cell from the cch->tree
         rbtree_delete(cch->tree, hst, &compare_hist_time);
+
         // adding the new page to the head of the list
         list_add_to_head(hst->list, time);
-        // adding the new tail to the ссh->tree
+
+        // updating the hst->time value
         hst->time = list_get_value(list_get_tail(hst->list));
+
+        // adding the new tail to the ссh->tree
         rbtree_insert(cch->tree, hst, &compare_hist_time);
 
 #ifdef CACHE_PAGE_LINKS_ON
@@ -153,24 +157,25 @@ void delete_cache(TCache* cch) {
 }
 
 #ifdef CACHE_DEBUGON
-void hist_dump(THist* hist) {
-    printf("hist->page = %lu\n", hist->page);
-    printf("hist->time = %lu\n", hist->time);
-    printf("hist->list = %p \n", hist->list);
-    list_dump(hist->list);
-}
-
-void cache_dump(TCache* cch) {
-    printf("Table:\n");
-    print_hash_table(cch->table);
-
-    printf("Lists:\n");
-    for (size_t i = 0; i < cch->size; ++i) {
-        hist_dump(&cch->histories[i]);
+    void hist_dump(THist* hist) {
+        printf("hist->page = %lu\n", hist->page);
+        printf("hist->time = %lu\n", hist->time);
+        printf("hist->list = %p \n", hist->list);
+        list_dump(hist->list);
     }
 
-    printf("Tree:\n");
+    void cache_dump(TCache* cch) {
+        printf("Table:\n");
+        print_hash_table(cch->table);
 
-    printf("\n");
-}
+        printf("Lists:\n");
+        for (size_t i = 0; i < cch->size; ++i) {
+            hist_dump(&cch->histories[i]);
+        }
+
+        printf("Tree:\n");
+        // rbtree_dump(cch->tree);
+
+        printf("\n");
+    }
 #endif
