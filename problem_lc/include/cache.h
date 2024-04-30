@@ -1,6 +1,8 @@
 #ifndef CACHE_H_INCLUDED
 #define CACHE_H_INCLUDED
 
+#include <stddef.h>
+
 typedef int CacheValueType;
 struct cache_LRU;
 
