@@ -227,34 +227,45 @@ void replace_node (rbtree t, node oldn, node newn) {
 
 void rbtree_insert (rbtree t, TTreeKey key, compare_func compare) {
     node inserted_node = new_node(key, RED, NULL, NULL);
+    
     if (t->root == NULL) {
         t->root = inserted_node;
+
     } else {
         node n = t->root;
+
         while (1) {
             int comp_result = compare(key, n->key);
+
             if (comp_result == 0) {
                 free (inserted_node);
                 return;
+
             } else if (comp_result < 0) {
                 if (n->left == NULL) {
                     n->left = inserted_node;
                     break;
+
                 } else {
                     n = n->left;
                 }
+
             } else {
                 assert (comp_result > 0);
+
                 if (n->right == NULL) {
                     n->right = inserted_node;
                     break;
+
                 } else {
                     n = n->right;
                 }
             }
         }
+
         inserted_node->parent = n;
     }
+
     insert_case1(t, inserted_node);
     verify_properties(t);
 }
@@ -511,6 +522,27 @@ void rbtree_clean_ (node t) {
         if (tree->right != NULL) {
             fprintf(save, "    %d -> %d;\n", tree->num_in_tree, (tree->right)->num_in_tree);
             draw_tree_2(save, tree->right);
+        }
+    }
+
+    static void node_dump(node n) {
+        printf("(");
+        if (n->left) {
+            node_dump(n->left);
+        }
+
+        printf("%d", hist_get_time(n->key));
+
+        if (n->right) {
+            node_dump(n->right);
+        }
+
+        printf(")");
+    }
+
+    void rbtree_dump(rbtree tree) {
+        if (tree->root) {
+            node_dump(tree->root);
         }
     }
 #endif

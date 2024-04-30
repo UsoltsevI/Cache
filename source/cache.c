@@ -23,15 +23,17 @@ struct cache {
 int compare_hist_time(void* first, void* second) {
     THist* first_struct  = (THist*) first;
     THist* second_struct = (THist*) second;
-
+#if 1
     if (first_struct->time < second_struct->time) {
         return -1;
-
-    } else if (first_struct->time < second_struct->time) {
+    } else if (first_struct->time > second_struct->time) {
         return 1;
     }
 
     return 0;
+#else
+    return first_struct->time - second_struct->time;
+#endif
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -106,6 +108,10 @@ int cache(TCache* cch
         // then we remove the minimum value from the cch->tree,
         // and in its place we will write the next value
         THist* del = tree_delete_min(cch->tree, &compare_hist_time);
+
+#ifdef CACHE_DEBUGON
+        printf("del->time = %lu\n", del->time);
+#endif
         // deleting the list from the cch->table
         table_delete_cell(cch->table, del->page);
 
@@ -174,9 +180,9 @@ void delete_cache(TCache* cch) {
         }
 
         printf("Tree:\n");
-        // rbtree_dump(cch->tree);
-
-        printf("\n");
+        // draw_tree(cch->tree);
+        rbtree_dump(cch->tree);
+        printf("\n\n");
     }
 
     TCacheTime hist_get_time(THist* hist) {

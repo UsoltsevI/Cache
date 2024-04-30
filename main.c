@@ -20,8 +20,11 @@ int main() {
         // printf("ghg\n");
 
         size_t last = cache(cch, next, i);
+#ifdef CACHE_DEBUGON
         printf("%lu: %lu: %lu\n", i, next, last);
+#endif
         num_hit += last;
+
 #ifdef CACHE_DEBUGON
         cache_dump(cch);
 #endif

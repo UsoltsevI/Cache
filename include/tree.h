@@ -36,6 +36,7 @@ void rbtree_clean (rbtree t);
 
 #ifdef CACHE_DEBUGON
     void draw_tree (rbtree tree);
+    void rbtree_dump(rbtree tree);
 #endif
 
 #endif // TREE_H
