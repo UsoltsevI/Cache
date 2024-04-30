@@ -227,7 +227,7 @@ void replace_node (rbtree t, node oldn, node newn) {
 
 void rbtree_insert (rbtree t, TTreeKey key, compare_func compare) {
     node inserted_node = new_node(key, RED, NULL, NULL);
-    
+
     if (t->root == NULL) {
         t->root = inserted_node;
 
@@ -436,8 +436,6 @@ TTreeKey tree_delete_min (rbtree t, compare_func compare) {
     node min = t->root;
     tree_search_min(t->root, &min, compare);
     
-    // node res = malloc(sizeof(struct rbtree_node_t));
-    // memcpy(res, min, sizeof(struct rbtree_node_t));
     TTreeKey res = min->key;
 
     rbtree_delete(t, min->key, compare);
@@ -445,15 +443,12 @@ TTreeKey tree_delete_min (rbtree t, compare_func compare) {
 }
 
 void tree_search_min (node n, node* min, compare_func compare) {
-    if (n->left != NULL && n->right != NULL && (compare((*min)->key, n->key) == -1))
+    if (compare(n->key, (*min)->key) < 0) {
         *min = n;
+    }
 
     if (n->left != NULL) {
         tree_search_min(n->left, min, compare);
-    }
-
-    if (n->right != NULL) {
-        tree_search_min(n->right, min, compare);
     }
 }
 
