@@ -1,6 +1,6 @@
 # Cache project
 
-## Description:
+## Description
 
 ### Common
 This is a school project to implement cache functions. This project implements a cache function that works on the [LRU-K](/documents/Eng_LRU_K.pdf) principle. Also in this project there is a regular LRU algorithm in the folder [/problem_lc](/problem_lc). 
@@ -24,7 +24,7 @@ The difficulty of searching a page due to the hash table is O(1). Adding a chang
 
 LRU, unlike LRU-K, works in O(1) because you don't have to look for the smallest element every time. This item will always be the end of the list.
 
-## Usage:
+## Usage
 To install this repository tap in your console:
 ```
 $ git clone git@github.com:UsoltsevI/Cache.git
@@ -37,15 +37,15 @@ $ cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 
 To create the project library itself and executable files:
 ```
-VERBOSE=1 cmake --build ./build
+$ VERBOSE=1 cmake --build ./build
 ```
 The library will be called `liblruk` and will be located in the build folder
 The library for a regular LRU will be called `liblrulib` and will be located in the build/problem_lc folder
 
-## Test results:
+## Test results
 The section will be finalized later...
 
-## Cache functions description:
+## Cache functions description
 Turn CACHE_PAGE_LINKS_ON on in order to receive information about the page that should be closed.
 
 Included files:
@@ -81,7 +81,7 @@ int cache(struct cache* cch
 void delete_cache(struct cache* cch);
 ```
 
-## Useful links:
+## Useful links
 * [Cache replacement policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
 * [Hash table](https://en.wikipedia.org/wiki/Hash_table)
 * [Linked list](https://en.wikipedia.org/wiki/Linked_list)

@@ -26,7 +26,7 @@ static void delete_chain(t_node* head);
 
 static void push_node(t_node* head, t_node* node);
 
-TMap* create_table(size_t size) {
+TMap* create_table_LRU(size_t size) {
     t_node* cur = NULL;
     TMap* tbl = NULL;
 
@@ -56,17 +56,17 @@ static size_t get_hash(TMap* table, THashValue value) {
     return pos;
 }
 
- static void delete_chain(t_node* head) {
-     t_node* tofree;
+static void delete_chain(t_node* head) {
+    t_node* tofree;
 
-     while (head != NULL) {
-         tofree = head;
-         head = head->next;
-         free(tofree);
-     }
- }
+    while (head != NULL) {
+        tofree = head;
+        head = head->next;
+        free(tofree);
+    }
+}
 
-void delete_table(TMap* tbl) {
+void delete_table_LRU(TMap* tbl) {
      for (size_t i = 0; i < tbl->size; ++i) {
          delete_chain(tbl->cells[i]);
      }
@@ -75,7 +75,7 @@ void delete_table(TMap* tbl) {
      free(tbl);
 }
 
-void add_value(TMap* table, THashContent cont, THashValue value) {
+void add_value_LRU(TMap* table, THashContent cont, THashValue value) {
 
     size_t position = get_hash(table, value);
     
@@ -88,7 +88,7 @@ void add_value(TMap* table, THashContent cont, THashValue value) {
 
 }
 
-THashContent delete_cell(TMap* table, THashValue value) {
+THashContent delete_cell_LRU(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
     t_node* cur = NULL;
     t_node* prev = NULL;
@@ -118,7 +118,7 @@ THashContent delete_cell(TMap* table, THashValue value) {
     return NULL;
 }
 
-THashContent search_cell(TMap* table, THashValue value) {
+THashContent search_cell_LRU(TMap* table, THashValue value) {
     size_t position = get_hash(table, value);
     t_node* cur = table->cells[position];
     while(cur != NULL) {
@@ -142,7 +142,7 @@ static void print_hash_list(t_node* head) {
     printf("||\n");
 }
 
-void print_hash_table(const TMap* table) {
+void print_hash_table_LRU(const TMap* table) {
     printf("table size: %lu\n", table->size);
     for(int i = 0; i < table->size; ++i) {
         if (table->cells[i] != NULL) {

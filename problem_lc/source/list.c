@@ -15,9 +15,9 @@ struct list {
     size_t size;
 };
 
-const int LISTGARBAGE = -1;
+static const int LISTGARBAGE = -1;
 
-List* create_list (size_t number_of_elements){
+List* create_list_LRU(size_t number_of_elements){
     List* list = (List*) calloc(1, sizeof(List));
     Node* list_temp;
 
@@ -43,7 +43,7 @@ List* create_list (size_t number_of_elements){
     return list;
 }
 
-void delete_list (List* list) {
+void delete_list_LRU(List* list) {
     Node* temp = list->head;
     Node* to_free;
 
@@ -56,7 +56,7 @@ void delete_list (List* list) {
     free(list);
 }
 
-void move_to_head(List* list, Node* new_head) {
+void move_to_head_LRU(List* list, Node* new_head) {
     if (new_head == NULL) {
         return;
     }
@@ -83,7 +83,7 @@ void move_to_head(List* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* add_to_head(List* list, int val) {
+Node* add_to_head_LRU(List* list, int val) {
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -91,19 +91,19 @@ Node* add_to_head(List* list, int val) {
     return list->head;
 }
 
-Node* get_head(List* list) {
+Node* get_head_LRU(List* list) {
     return list->head;
 }
 
-Node* get_tail(List* list) {
+Node* get_tail_LRU(List* list) {
     return list->tail;
 }
 
-int get_value(Node* node) {
+int get_value_LRU(Node* node) {
     return node->val;
 }
 
-void list_dump(List* list) {
+void list_dump_LRU(List* list) {
     Node* list_temp = list->head;
 
     for (size_t i = 0; i < list->size; ++i) {

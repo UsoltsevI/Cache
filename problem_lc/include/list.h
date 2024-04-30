@@ -10,20 +10,20 @@ typedef struct list List;
 
 typedef struct node Node;
 
-List* create_list(size_t number_of_elements);
+List* create_list_LRU(size_t number_of_elements);
 
-void move_to_head(List* list, Node* new_head);
+void move_to_head_LRU(List* list, Node* new_head);
 
-void delete_list(List* list);
+void delete_list_LRU(List* list);
 
-Node* add_to_head(List* list, int val);
+Node* add_to_head_LRU(List* list, int val);
 
-void list_dump (List* list);
+void list_dump_LRU(List* list);
 
-Node* get_head(List* list);
+Node* get_head_LRU(List* list);
 
-Node* get_tail(List* list);
+Node* get_tail_LRU(List* list);
 
-int get_value(Node* node);
+int get_value_LRU(Node* node);
 
 #endif // LIST_H

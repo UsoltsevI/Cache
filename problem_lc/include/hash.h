@@ -1,5 +1,5 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef HASH_H_INCLUDED
+#define HASH_H_INCLUDED
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -14,15 +14,15 @@ typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition
 
 // creates a list with specified size and returns the link to it
-TMap* create_table(size_t size);
+TMap* create_table_LRU(size_t size);
 
-void delete_table(TMap* table);
+void delete_table_LRU(TMap* table);
 
 // adds node with value (key == value)
-void add_value(TMap* table, THashContent cont, THashValue value);
+void add_value_LRU(TMap* table, THashContent cont, THashValue value);
 
 // find cell with value
-THashContent search_cell(TMap* table, THashValue value);
+THashContent search_cell_LRU(TMap* table, THashValue value);
 
 // removes the cell (from local linked list)
 // with value == value,
@@ -30,8 +30,8 @@ THashContent search_cell(TMap* table, THashValue value);
 // returns link to removed node (belonging to public linked list,
 // not to local linked list),
 // and NULL if there is no cell with such value
-THashContent delete_cell(TMap* table, THashValue value);
+THashContent delete_cell_LRU(TMap* table, THashValue value);
 
-void print_hash_table(const TMap* tbl);
+void print_hash_table_LRU(const TMap* tbl);
 
-#endif
+#endif //HASH_H_INCLUDED

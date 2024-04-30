@@ -13,7 +13,7 @@ int main() {
 
     res = scanf("%lu%lu", &m, &n);
 
-    cch = create_cache(m);
+    cch = create_cache_LRU(m);
 
     for (size_t i = 0; i < n; ++i) {
         int next;
@@ -25,7 +25,7 @@ int main() {
 
     printf("%lu\n", num_hit);
 
-    delete_cache(cch);
+    delete_cache_LRU(cch);
 
     return 0;
 }
