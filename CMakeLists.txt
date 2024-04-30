@@ -17,11 +17,11 @@ SET(SRCS
     source/tree.c
 )
 
-add_library(lruklib STATIC ${SRCS})
-target_include_directories(lruklib PUBLIC "include")
+add_library(lruk STATIC ${SRCS})
+target_include_directories(lruk PUBLIC "include")
 
 add_executable(lruk.x main.c)
-target_link_libraries(lruk.x PUBLIC lruklib)
+target_link_libraries(lruk.x PUBLIC lruk)
 
 add_subdirectory(problem_lc)
 
