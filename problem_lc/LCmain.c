@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../include/hash.h"
-#include "../include/cache.h"
+#include "./include/hash.h"
+#include "./include/cache.h"
 
 // This is the main function for the problem_LC
 // and separate compilation task.
