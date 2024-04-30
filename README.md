@@ -15,7 +15,7 @@ The main idea of the LRU-K algorithm is that it records the history (time of the
 ### Implementation
 The figure below shows an example of dependencies inside the cache function in our implementation:
 
-![structure](/documents/Illust.pdf)
+![structure](/documents/Illust.png)
 
 The [hash table](https://en.wikipedia.org/wiki/Hash_table) is implemented by the chaining method. A [red-black tree](https://en.wikipedia.org/wiki/Red–black_tree) is also used to quickly find the smallest element. Red-black tree is selected because inserts and deletes are needed much more often in this algorithm than searches.
 
