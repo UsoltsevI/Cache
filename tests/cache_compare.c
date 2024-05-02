@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
     clock_t start = 0, end = 0;
     double tm = 0;
 
-    if (argc != 0) {
+    if (argc != 1) {
         fl = fopen(argv[0], "a+");
     }
     else {
