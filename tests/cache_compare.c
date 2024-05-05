@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
+#include <assert.h>
 #define DEFAULT_FILE "res_compare.csv"
 
 int* create_random_arr(size_t size);
@@ -61,7 +62,7 @@ int main(int argc, char* argv[]) {
     int* arr = NULL;
     int* opt = NULL;
     int num_hits = 0;
-    int n = 0;
+    int n = 0, test = 0;
     clock_t start = 0, end = 0;
     double tm = 0;
 
@@ -74,15 +75,18 @@ int main(int argc, char* argv[]) {
 
     fprintf(fl, "Num of values, ");
     printf("write the number of LRU_K\n");
-    scanf("%i", &n);
+    test = scanf("%i", &n);
+    assert(test == 1);
     opt = (int*)calloc(n * 2 + 1, sizeof(int));
 
     printf("write length of LRU\n");
-    scanf("%i", &opt[n * 2]);
+    test = scanf("%i", &opt[n * 2]);
+    assert(test == 1);
     fprintf(fl, "LRU time   (len = %i), LRU hits    (len = %i), ", opt[n * 2], opt[n * 2]);
     for(int t = 0; t < n; ++t) {
         printf("write length and k\n");
-        scanf("%i %i", &opt[t * 2], &opt[t * 2 + 1]);
+        test = scanf("%i %i", &opt[t * 2], &opt[t * 2 + 1]);
+        assert(test == 2);
         fprintf(fl, "LRU_K-%i time  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
         fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
     }
