@@ -94,6 +94,7 @@ int main(int argc, char* argv[]) {
 
     for(int i = 10; i <= 100000; i * 10) {
         arr = create_random_arr(i);
+        print("POBEDA\n");
 
         fprintf(fl, "%i           , ", i);
 
