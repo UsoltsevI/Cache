@@ -67,10 +67,10 @@ int main(int argc, char* argv[]) {
     double tm = 0;
 
     if (argc != 1) {
-        fl = fopen(argv[0], "a+");
+        fl = fopen(argv[0], "w+");
     }
     else {
-        fl = fopen(DEFAULT_FILE, "a+");
+        fl = fopen(DEFAULT_FILE, "w+");
     }
 
     fprintf(fl, "Num of values, ");
