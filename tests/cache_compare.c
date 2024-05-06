@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
     }
     fprintf(fl,"\n");
 
-    for(int i = 10; i <= 10000000; i * 10) {
+    for(int i = 10; i <= 100000; i * 10) {
         arr = create_random_arr(i);
 
         fprintf(fl, "%i           , ", i);
