@@ -21,6 +21,8 @@ struct rbtree_t {
 static node grandparent (node n);
 static node sibling (node n);
 static node uncle (node n);
+
+#ifdef TREE_DEBUGON
 static void verify_properties (rbtree t);
 static void property_1 (node root);
 static void property_2 (node root);
@@ -28,6 +30,7 @@ static color node_color (node n);
 static void property_4 (node root);
 static void property_5 (node root);
 static void property_5_helper (node n, int black_count, int* black_count_path);
+#endif
 
 static node new_node (TTreeKey key , color node_color, node left, node right);
 static node lookup_node (rbtree t, TTreeKey key, compare_func compare);
@@ -92,6 +95,7 @@ node uncle (node n) {
     return sibling(n->parent);
 }
 
+#ifdef TREE_DEBUGON
 void verify_properties (rbtree t) {
     property_1(t->root);
     property_2(t->root);
@@ -109,11 +113,12 @@ void property_1 (node n) {
 void property_2 (node root) {
     assert(node_color(root) == BLACK);
 }
-
+#endif
 color node_color (node n) {
     return n == NULL ? BLACK : n->color;
 }
 
+#ifdef TREE_DEBUGON
 void property_4 (node n) {
     if (node_color(n) == RED) {
         assert (node_color(n->left)   == BLACK);
@@ -137,7 +142,7 @@ void property_5_helper (node n, int black_count, int* path_black_count) {
     if (n == NULL) {
         if (*path_black_count == -1) {
             *path_black_count = black_count;
-            
+
         } else {
             assert (black_count == *path_black_count);
         }
@@ -148,11 +153,16 @@ void property_5_helper (node n, int black_count, int* path_black_count) {
     property_5_helper(n->left,  black_count, path_black_count);
     property_5_helper(n->right, black_count, path_black_count);
 }
+#endif
 
 rbtree rbtree_create () {
     rbtree t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
+
+#ifdef TREE_DEBUGON
     verify_properties(t);
+#endif
+
     return t;
 }
 
@@ -286,7 +296,10 @@ void rbtree_insert (rbtree t, TTreeKey key, compare_func compare) {
     }
 
     insert_case1(t, inserted_node);
+
+#ifdef TREE_DEBUGON
     verify_properties(t);
+#endif
 }
 
 void insert_case1 (rbtree t, node n) {
@@ -374,7 +387,9 @@ void rbtree_delete (rbtree t, TTreeKey key, compare_func compare) {
     }
     free(n);
 
+#ifdef TREE_DEBUGON
     verify_properties(t);
+#endif
 }
 
 static node maximum_node (node n) {
