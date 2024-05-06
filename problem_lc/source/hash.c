@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <assert.h>
+#include <limits.h>
 #include <stddef.h>
 #include "../include/hash.h"
 #include "../include/list.h"
@@ -49,11 +50,13 @@ TMap* create_table_LRU(size_t size) {
 
 static size_t get_hash(TMap* table, THashValue value) {
     // можно использовать алгоритм проще: return value % table->size;
-    const double a = 0.6180339887;
-    size_t pos = 0;
+    //const double a = 0.6180339887;
+    //size_t pos = 0;
 
-    pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
-    return pos;
+    //pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
+    //return pos;
+    assert(((value % table->size) >= 0) && ((value % table->size) < INT_MAX));
+    return value % table->size;
 }
 
 static void delete_chain(t_node* head) {
