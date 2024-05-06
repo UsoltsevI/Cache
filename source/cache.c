@@ -7,8 +7,8 @@
 
 struct history {
     TList* list;
-    TCacheValue page;
-    TCacheTime  time;
+    TCachePage page;
+    TCacheKey  time;
 };
 
 struct cache {
@@ -18,6 +18,7 @@ struct cache {
     size_t cur_lst;
     size_t size;
     size_t k;
+    size_t iteration;
 };
 
 int compare_hist_time(void* first, void* second) {
@@ -52,30 +53,19 @@ TCache* create_cache(size_t size, size_t k) {
     }
 
     cch->cur_lst = 0;
+    cch->iteration = 0;
 
     return cch;
 }
 
-int cache(TCache* cch
-            , const TCacheValue page
-            , TCacheTime time
-#ifdef CACHE_PAGE_LINKS_ON
-            , TCacheValue* to_close
-#endif
-            ) {
+int cache_update(TCache* cch
+            , int key
+            , TCachePage (*get_page) (int)) {
 
-#ifdef CACHE_PAGE_LINKS_ON
-    if (page == NULL || to_close == NULL) {
-        fprintf(stderr, "NULL argument in the file %s"
-                        ", in the function %s"
-                        ", on the line %d\n", __FILE__
-                        , __func__, __LINE__);
-        return 0;
-    }
-#endif
+    ++(cch->iteration);
 
     // we are looking among the open pages
-    THist* hst = table_search_cell(cch->table, page);
+    THist* hst = table_search_cell(cch->table, key);
     
     if (hst != NULL) { // hit!
         // if the lst is found, then we update 
@@ -85,7 +75,7 @@ int cache(TCache* cch
         rbtree_delete(cch->tree, hst, &compare_hist_time);
 
         // adding the new page to the head of the list
-        list_add_to_head(hst->list, time);
+        list_add_to_head(hst->list, cch->iteration);
 
         // updating the hst->time value
         hst->time = list_get_value(list_get_tail(hst->list));
@@ -93,10 +83,6 @@ int cache(TCache* cch
         // adding the new tail to the ссh->tree
         rbtree_insert(cch->tree, hst, &compare_hist_time);
 
-#ifdef CACHE_PAGE_LINKS_ON
-        // there is no need to close anything
-        *to_close = NULL;
-#endif
         return 1;
     }
 
@@ -123,28 +109,24 @@ int cache(TCache* cch
         // deleting elements from list
         list_clean(del->list);
 
-        del->page = page;
-        del->time = time;
+        del->page = get_page(key);
+        del->time = cch->iteration;
 
-        table_add_value(cch->table, del, page);
+        table_add_value(cch->table, del, key);
         list_add_to_head(del->list, del->time);
         rbtree_insert(cch->tree, del, &compare_hist_time);
 
     } else {
         // if there are still free lists left, 
         // just write them down there
-        cch->histories[cch->cur_lst].page = page;
-        cch->histories[cch->cur_lst].time = time;
+        cch->histories[cch->cur_lst].page = get_page(key);
+        cch->histories[cch->cur_lst].time = cch->iteration;
 
-        table_add_value(cch->table, &cch->histories[cch->cur_lst], page);
+        table_add_value(cch->table, &cch->histories[cch->cur_lst], cch->histories[cch->cur_lst].page);
         rbtree_insert(cch->tree, &cch->histories[cch->cur_lst], &compare_hist_time);
-        list_add_to_head(cch->histories[cch->cur_lst].list, time);
+        list_add_to_head(cch->histories[cch->cur_lst].list, cch->iteration);
 
         cch->cur_lst += 1;
-
-#ifdef CACHE_PAGE_LINKS_ON
-        *to_close = NULL;
-#endif
     }
 
     return 0;

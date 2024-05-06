@@ -49,11 +49,12 @@ TMap* create_table(size_t size) {
 
 static size_t get_hash(TMap* table, THashValue value) {
     // можно использовать алгоритм проще: return value % table->size;
-    const double a = 0.6180339887;
-    size_t pos = 0;
+    // const double a = 0.6180339887;
+    // size_t pos = 0;
 
-    pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
-    return pos;
+    // pos = (int)table->size * ((a * (value)) - (int)((a * (value))));
+    // return pos;
+    return value % table->size;
 }
 
 static void delete_chain(t_node* head) {

@@ -8,7 +8,7 @@
 
 typedef THist* THashContent; // == Hash Content Type
 
-typedef TCacheTime THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
+typedef TCacheKey THashValue; // == Hash Value Type. Ну то есть то, по чему мы ищем значение в content
 
 typedef struct table TMap; // == Hash Map Type
 struct table; // main struct defenition

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "./include/cache.h"
 
+TCachePage get_page(int key) {
+    return key;
+}
 // This is the main function for the problem_LC
 // and separate compilation task.
 // You just need to copy it to LC.c before submitting.
@@ -19,7 +22,7 @@ int main() {
         res = scanf("%lu", &next);
         // printf("ghg\n");
 
-        size_t last = cache(cch, next, i);
+        size_t last = cache_update(cch, next, &get_page);
 #ifdef CACHE_DEBUGON
         printf("%lu: %lu: %lu\n", i, next, last);
 #endif
