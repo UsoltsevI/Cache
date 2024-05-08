@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "include/queue.h"
+#include "../include/queue.h"
 
 struct queue {
     TQueueValue* data;
