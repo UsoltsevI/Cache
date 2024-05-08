@@ -13,7 +13,7 @@ project("cache")
 SET(SRCS 
     source/cache.c
     source/hash.c
-    source/list.c
+    source/queue.c
     source/tree.c
 )
 
