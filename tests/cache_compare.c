@@ -19,6 +19,8 @@ int* create_fluct_arr(size_t size);
 
 void delete_arr(int* arr);
 
+size_t get_page(int i);
+
 int get_hits_LRU(int* arr, size_t size_arr, size_t size_cache);
 
 int get_hits_LRU_K(int* arr, size_t size_arr, size_t size_cache, int k);
@@ -60,6 +62,10 @@ void delete_arr(int* arr) {
     free(arr);
 }
 
+size_t get_page(int i) {
+    return (size_t)i;
+}
+
 int get_hits_LRU(int* arr, size_t size_arr,  size_t size_cache) {
     struct cache_LRU* cch = create_cache_LRU(size_cache);
     int res = 0, cou = 0;
@@ -79,7 +85,7 @@ int get_hits_LRU_K(int* arr, size_t size_arr,  size_t size_cache, int k) {
     int res = 0, cou = 0;
 
     for(int i = 0; i < size_arr; ++i) {
-        res = cache(cch, arr[i], time(NULL));
+        res = cache_update(cch, arr[i], get_page);
         cou += res;
     }
 
@@ -97,8 +103,8 @@ int main(int argc, char* argv[]) {
     clock_t start = 0, end = 0;
     double tm = 0;
 
-    if (argc == 2) {
-        fl = fopen(argv[1], "w+");
+    if (argc == 3) {
+        fl = fopen(argv[2], "w+");
     }
     else {
         fl = fopen(DEFAULT_FILE, "w+");
@@ -124,13 +130,15 @@ int main(int argc, char* argv[]) {
     fprintf(fl,"\n");
 
     for(int i = 10; i <= 10000000; i = i * 10) {
-        if (argc == 1) {
-            if (strcmp(argv[0], "saw")) {
+        if (argc == 2) {
+            if (strcmp(argv[1], "saw") == 0) {
                 arr = create_saw_arr(i);
             }
-
-            if (strcmp(argv[0], "fluct")) {
+            else if (strcmp(argv[1], "fluct") == 0) {
                 arr = create_fluct_arr(i);
+            }
+            else {
+                printf("ERROR: wrong name allocation\n");
             }
         }
         else {
