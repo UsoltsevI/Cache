@@ -34,10 +34,10 @@ void queue_add_to_head (TQueue* queue, TQueueValue new_el) {
     *(queue->tail) = new_el;
     queue->head = queue->tail;
 
-    if (queue->tail == queue->data + sizeof(TQueueValue) * (queue->capacity - 1))
+    if (queue->tail == queue->data + queue->capacity - 1)
         queue->tail = queue->data;
     else 
-        queue->tail = queue->head + sizeof(TQueueValue);
+        queue->tail = queue->head + 1;
 }
 
 TQueueValue queue_get_head (TQueue* queue) {
@@ -50,8 +50,6 @@ TQueueValue queue_get_tail (TQueue* queue) {
 }
 
 void queue_clean (TQueue* queue) {
-    free(queue);
-    queue->data = (TQueueValue*)calloc(queue->capacity, sizeof(TQueueValue));
     queue->size = 0;
     queue->head = queue->tail = queue->data;
 }
