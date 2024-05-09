@@ -12,6 +12,7 @@
 #define SIZE_SAW 8
 #define HIGHT_FLUCT 8
 #define LENGTH_FLUCT 8
+#define MAX_RANDOM 50000
 
 int* create_random_arr(size_t size);
 int* create_saw_arr(size_t size);
@@ -29,7 +30,7 @@ int* create_random_arr(size_t size) {
     int* arr = (int*)calloc(size, sizeof(int));
 
     for(int i = 0; i < size; ++i) {
-        arr[i] = rand();
+        arr[i] = rand() % MAX_RANDOM;
     }
     return arr;
 }
