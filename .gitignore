@@ -1,7 +1,0 @@
-*.o
-*.out
-*.x
-.vscode/
-build
-buffer.txt
-drawTree.txt

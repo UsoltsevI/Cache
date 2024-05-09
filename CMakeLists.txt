@@ -28,21 +28,15 @@ SET(SRCS
 add_library(lrukmod STATIC ${SRCSM})
 target_include_directories(lrukmod PUBLIC "include")
 
-add_library(lruk STATIC ${SRCS})
-target_include_directories(lruk PUBLIC "include")
-
 add_executable(lrukmod.x main.c)
 target_link_libraries(lrukmod.x PUBLIC lrukmod)
-
-add_executable(lruk.x main.c)
-target_link_libraries(lruk.x PUBLIC lruk)
 
 add_subdirectory(problem_lc)
 
 # Executable file for comparison with cache_LRU 
 # and testing with different K and M
 add_executable(cache_compare.x ./tests/cache_compare.c)
-target_link_libraries(cache_compare.x lrukmod lrulib)
+target_link_libraries(cache_compare.x PUBLIC lrukmod lrulib)
 
 
 # An executable file for creating tests. 
@@ -50,3 +44,9 @@ target_link_libraries(cache_compare.x lrukmod lrulib)
 # the cache for the correctness of the algorithm implementation.
 # add_executable(test_cache.x ./tests/test_cache.c)
 # target_link_libraries(lruklib)
+
+add_library(lruk STATIC ${SRCS})
+target_include_directories(lruk PUBLIC "include")
+
+add_executable(lruk.x main.c)
+target_link_libraries(lruk.x PUBLIC lruk)
