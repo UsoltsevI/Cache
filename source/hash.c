@@ -74,8 +74,9 @@ void delete_table(TMap* tbl) {
          delete_chain(tbl->cells[i]);
      }
 
+     delete_chain(tbl->accumulating_list);
+
      free(tbl->cells);
-     free(tbl->accumulating_list);
      free(tbl);
 }
 
