@@ -20,16 +20,16 @@ const int LISTGARBAGE = -1;
 
 TList* create_list (size_t number_of_elements){
     TList* list = (TList*) calloc(1, sizeof(TList));
-    Node* list_temp;
+    TNode* list_temp;
 
     list->size = number_of_elements;
 
-    list->head = (Node*) calloc(1, sizeof(Node));
+    list->head = (TNode*) calloc(1, sizeof(TNode));
     list_temp = list->head;
     list_temp->val = LISTGARBAGE;
 
     for (size_t i = 0; i < number_of_elements - 1; i++) {
-        list_temp->next = (Node*) calloc(1, sizeof(Node));
+        list_temp->next = (TNode*) calloc(1, sizeof(TNode));
         list_temp->next->val = LISTGARBAGE;
         list_temp->next->prev = list_temp;
 
@@ -47,8 +47,8 @@ TList* create_list (size_t number_of_elements){
 }
 
 void delete_list (TList* list) {
-    Node* temp = list->head;
-    Node* to_free;
+    TNode* temp = list->head;
+    TNode* to_free;
 
     for (size_t i = 0; i < list->size; ++i) {
         to_free = temp;
@@ -59,7 +59,7 @@ void delete_list (TList* list) {
     free(list);
 }
 
-void list_move_to_head(TList* list, Node* new_head) {
+void list_move_to_head(TList* list, TNode* new_head) {
     if (new_head == NULL) {
         return;
     }
@@ -89,7 +89,7 @@ void list_move_to_head(TList* list, Node* new_head) {
     list->head = new_head;
 }
 
-Node* list_add_to_head(TList* list, TListValue val) {
+TNode* list_add_to_head(TList* list, TListValue val) {
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -97,25 +97,25 @@ Node* list_add_to_head(TList* list, TListValue val) {
     return list->head;
 }
 
-Node* list_get_head(TList* list) {
+TNode* list_get_head(TList* list) {
     return list->head;
 }
 
-Node* list_get_tail(TList* list) {
+TNode* list_get_tail(TList* list) {
     return list->fact_tail;
 }
 
-TListValue list_get_value(Node* node) {
+TListValue list_get_value(TNode* node) {
     return node->val;
 }
 
-void list_set_value (Node* node, TListValue value) {
+void list_set_value (TNode* node, TListValue value) {
     node->val = value;
 }
 
 void list_clean(TList* list) {
-    Node* temp = list->head;
-    Node* to_free;
+    TNode* temp = list->head;
+    TNode* to_free;
 
     for (size_t i = 0; i < list->size; ++i) {
         to_free = temp;
@@ -128,7 +128,7 @@ void list_clean(TList* list) {
 }
 
 void list_dump(TList* list) {
-    Node* list_temp = list->head;
+    TNode* list_temp = list->head;
 
     for (size_t i = 0; i < list->size; ++i) {
         printf("%ld ->", list_temp->val);
