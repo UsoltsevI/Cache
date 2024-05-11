@@ -14,6 +14,7 @@ struct list {
     struct node* tail;                                              
     struct node* fact_tail;
     size_t size;
+    int is_empty;
 };
 
 const int LISTGARBAGE = -1;
@@ -42,6 +43,8 @@ TList* create_list (size_t number_of_elements){
     list->head->prev = list->tail;
 
     list->fact_tail = list->tail;
+
+    list->is_empty = 1;
 
     return list;
 }
@@ -90,6 +93,8 @@ void list_move_to_head(TList* list, TNode* new_head) {
 }
 
 TNode* list_add_to_head(TList* list, TListValue val) {
+    list->is_empty = 0;
+
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
@@ -98,6 +103,9 @@ TNode* list_add_to_head(TList* list, TListValue val) {
 }
 
 TNode* list_get_head(TList* list) {
+    if (list->is_empty) {
+        return NULL;
+    }
     return list->head;
 }
 
@@ -124,7 +132,7 @@ void list_clean(TList* list) {
     }
 
     list->fact_tail = list->tail;
-
+    list->is_empty = 1;
 }
 
 void list_dump(TList* list) {
