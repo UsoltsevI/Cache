@@ -5,7 +5,8 @@
 #include <stdio.h>
 
 struct rbtree_node_t {
-    TTreeKey key;
+    size_t key;
+    TTreeContent data;
     struct rbtree_node_t* left;
     struct rbtree_node_t* right;
     struct rbtree_node_t* parent;
@@ -32,8 +33,8 @@ static void property_5 (node root);
 static void property_5_helper (node n, int black_count, int* black_count_path);
 #endif
 
-static node new_node (TTreeKey key , color node_color, node left, node right);
-static node lookup_node (rbtree t, TTreeKey key, compare_func compare);
+static node new_node (size_t key, TTreeContent data, color node_color, node left, node right);
+static node lookup_node (rbtree t, size_t key, compare_func compare);
 static void rotate_left (rbtree t, node n);
 static void rotate_right (rbtree t, node n);
 
@@ -166,12 +167,13 @@ rbtree rbtree_create () {
     return t;
 }
 
-node new_node (TTreeKey key , color node_color, node left, node right) {
+node new_node (size_t key, TTreeContent data, color node_color, node left, node right) {
     node result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;
     result->color = node_color;
     result->left = left;
     result->right = right;
+    result->data = data;
 
     result->num_in_tree = 0;
 
@@ -187,7 +189,7 @@ node new_node (TTreeKey key , color node_color, node left, node right) {
     return result;
 }
 
-node lookup_node (rbtree t, TTreeKey key, compare_func compare) {
+node lookup_node (rbtree t, size_t key, compare_func compare) {
     node n = t->root;
     while (n != NULL) {
         int comp_result = compare(key, n->key);
@@ -206,7 +208,7 @@ node lookup_node (rbtree t, TTreeKey key, compare_func compare) {
     return n;
 }
 
-TTreeKey rbtree_lookup (rbtree t, TTreeKey key, compare_func compare) {
+size_t rbtree_lookup (rbtree t, size_t key, compare_func compare) {
     node n = lookup_node(t, key, compare);
     return n == NULL ? NULL : n->key;
 }
@@ -254,8 +256,8 @@ void replace_node (rbtree t, node oldn, node newn) {
     }
 }
 
-void rbtree_insert (rbtree t, TTreeKey key, compare_func compare) {
-    node inserted_node = new_node(key, RED, NULL, NULL);
+void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare) {
+    node inserted_node = new_node(key, data, RED, NULL, NULL);
 
     if (t->root == NULL) {
         t->root = inserted_node;
@@ -358,7 +360,7 @@ void insert_case5 (rbtree t, node n) {
     }
 }
 
-void rbtree_delete (rbtree t, TTreeKey key, compare_func compare) {
+void rbtree_delete (rbtree t, size_t key, compare_func compare) {
     node child;
     node n = lookup_node(t, key, compare);
 
@@ -489,11 +491,11 @@ void delete_case6 (rbtree t, node n) {
     }
 }
 
-TTreeKey tree_delete_min (rbtree t, compare_func compare) {
+size_t tree_delete_min (rbtree t, compare_func compare) {
     node min = t->root;
     tree_search_min(t->root, &min, compare);
     
-    TTreeKey res = min->key;
+    size_t res = min->key;
 
     rbtree_delete(t, min->key, compare);
     return res;

@@ -3,9 +3,7 @@
 
 #include "cache.h"
 
-// typedef THist* TTreeContent;
-
-typedef THist* TTreeKey;
+typedef THist* TTreeContent;
 
 typedef double time;
 
@@ -19,18 +17,18 @@ typedef int (*compare_func)(void* left, void* right);
 
 rbtree rbtree_create ();
 
-TTreeKey rbtree_lookup (rbtree t, TTreeKey key, compare_func compare);
+size_t rbtree_lookup (rbtree t, size_t key, compare_func compare);
 
-void rbtree_insert (rbtree t, TTreeKey key, compare_func compare);
+void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare);
 
-void rbtree_delete (rbtree t, TTreeKey key, compare_func compare);
+void rbtree_delete (rbtree t, size_t key, compare_func compare);
 
 int compare_time(void* leftp, void* rightp);
 
 typedef rbtree_node node;
 typedef enum rbtree_node_color color;
 
-TTreeKey tree_delete_min (rbtree t, compare_func compare);
+size_t tree_delete_min (rbtree t, compare_func compare);
 
 void rbtree_clean (rbtree t);
 
