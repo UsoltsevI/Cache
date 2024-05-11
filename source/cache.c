@@ -74,38 +74,42 @@ int cache_update(TCache* cch
     THist* hst = table_search_cell(cch->table, key);
 
     if (hst != NULL) {
-        rbtree_delete(cch->tree, hst, &compare_hist_itr);
+        if (hst->last_itr == MINUS_INF) {
+            queue_add_to_head(hst->queue, cch->iteration);
 
-        size_t prev_last_itr = hst->last_itr;
+            hst->last_itr = queue_get_tail(hst->queue);
 
-        queue_add_to_head(hst->queue, cch->iteration);
-
-        hst->last_itr = queue_get_tail(hst->queue);
-
-        if (prev_last_itr == MINUS_INF) {
             if (hst->last_itr != MINUS_INF) {
-                list_delete_node(cch->list, hst->last_itr);
+                list_delete_node(cch->list, hst->node);
                 hst->node = NULL; // DEBUG
+                rbtree_insert(cch->tree, hst, &compare_hist_itr);
 
             } else {
                 list_move_to_head(cch->list, hst->node);
             }
-        } 
 
-        assert(((prev_last_itr != MINUS_INF) && (hst->last_itr == MINUS_INF)));
+        } else {
+            rbtree_delete(cch->tree, hst, &compare_hist_itr);
 
-        rbtree_insert(cch->tree, hst, &compare_hist_itr);
+            queue_add_to_head(hst->queue, cch->iteration);
+
+            hst->last_itr = queue_get_tail(hst->queue);
+
+            assert(hst->last_itr != MINUS_INF); // DEBUG
+            assert(hst->node == NULL);          // DEBUG
+
+            rbtree_insert(cch->tree, hst, &compare_hist_itr);
+        }
 
         return 1;
     }
 
     if (cch->cur_hst == cch->size) {
-        hst = tree_delete_min(cch->tree, &compare_hist_itr);
-
-        if (hst->last_itr == MINUS_INF) {
-            assert(hst->node != NULL);
-
+        if (list_num_elem(cch->list) > 0) {
             hst = list_get_value(list_get_tail(cch->list));
+
+            assert(hst->node != NULL);          // DEBUG
+            assert(hst->last_itr == MINUS_INF); // DEBUG
 
             table_delete_cell(cch->table, hst->key);
 
@@ -117,6 +121,8 @@ int cache_update(TCache* cch
             hst->key = key;
             hst->page = get_page(key);
             hst->last_itr = queue_get_tail(hst->queue);
+
+            table_add_value(cch->table, hst, key);
 
             if (hst->last_itr == MINUS_INF) {
                 list_move_to_head(cch->list, hst->node);
@@ -124,13 +130,14 @@ int cache_update(TCache* cch
             } else {
                 list_delete_node(cch->list, hst->node);
                 hst->node = NULL; // DEBUG
+                rbtree_insert(cch->tree, hst, &compare_hist_itr);
             }
 
-            table_add_value(cch->table, hst, key);
-            rbtree_insert(cch->tree, hst, &compare_hist_itr);
-
         } else {
-            assert(hst->node == NULL);
+            hst = tree_delete_min(cch->tree, &compare_hist_itr);
+
+            assert(hst->node == NULL);          // DEBUG
+            assert(hst->last_itr != MINUS_INF); // DEBUG
 
             table_delete_cell(cch->table, hst->key);
 
@@ -143,14 +150,15 @@ int cache_update(TCache* cch
             hst->page = get_page(key);
             hst->last_itr = queue_get_tail(hst->queue);
 
+            table_add_value(cch->table, hst, key);
+
             if (hst->last_itr == MINUS_INF) {
                 list_add_to_head(cch->list, hst);
                 hst->node = list_get_head(cch->list);
 
+            } else {
+                rbtree_insert(cch->tree, hst, &compare_hist_itr);
             }
-
-            table_add_value(cch->table, hst, key);
-            rbtree_insert(cch->tree, hst, &compare_hist_itr);
         }
 
     } else {
@@ -165,17 +173,17 @@ int cache_update(TCache* cch
         queue_add_to_head(hst->queue, cch->iteration);
 
         hst->last_itr = queue_get_tail(hst->queue);
-                
+        
+        table_add_value(cch->table, hst, key);
+        
         if (hst->last_itr == MINUS_INF) {
             list_add_to_head(cch->list, hst);
             hst->node = list_get_head(cch->list);
 
         } else {
-            hst->node = NULL;
+            hst->node = NULL; // DEBUG
+            rbtree_insert(cch->tree, hst, &compare_hist_itr);
         }
-
-        table_add_value(cch->table, hst, key);
-        rbtree_insert(cch->tree, hst, &compare_hist_itr);
     }
 
     return 0;
