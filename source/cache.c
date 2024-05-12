@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+// Cache LRU-K implementation
+//
+//------------------------------------------------------------------------------
+//
+// This file implements the classic LRU-K algorithm described in the 
+// following article:
+// https://github.com/UsoltsevI/Cache/blob/main/documents/Eng_LRU_K.pdf
+// 
+// It uses a tree to find the element whose kth access was the earliest.
+// A list separate from the tree is used to find the earliest element 
+// if there are pages with less than K hits stored in the directory.
+//
+//------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -70,8 +86,11 @@ int cache_update(TCache* cch
 
             if (hst->last_itr != MINUS_INF) {
                 list_delete_node(cch->list, hst->node);
-                hst->node = NULL; // DEBUG
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
+
+                #ifdef DEBUGON
+                    hst->node = NULL;
+                #endif
 
             } else {
                 list_move_to_head(cch->list, hst->node);
@@ -84,8 +103,8 @@ int cache_update(TCache* cch
 
             hst->last_itr = queue_get_tail(hst->queue);
 
-            assert(hst->last_itr != MINUS_INF); // DEBUG
-            assert(hst->node == NULL);          // DEBUG
+            assert(hst->last_itr != MINUS_INF);
+            assert(hst->node == NULL);
 
             rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
         }
@@ -97,8 +116,8 @@ int cache_update(TCache* cch
         if (list_get_head(cch->list) == NULL) {
             hst = list_get_value(list_get_tail(cch->list));
 
-            assert(hst->node != NULL);          // DEBUG
-            assert(hst->last_itr == MINUS_INF); // DEBUG
+            assert(hst->node != NULL);
+            assert(hst->last_itr == MINUS_INF);
 
             table_delete_cell(cch->table, hst->key);
 
@@ -118,15 +137,18 @@ int cache_update(TCache* cch
 
             } else {
                 list_delete_node(cch->list, hst->node);
-                hst->node = NULL; // DEBUG
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
+            
+                #ifdef DEBUGON
+                    hst->node = NULL;
+                #endif
             }
 
         } else {
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
 
-            assert(hst->node == NULL);          // DEBUG
-            assert(hst->last_itr != MINUS_INF); // DEBUG
+            assert(hst->node == NULL);
+            assert(hst->last_itr != MINUS_INF);
 
             table_delete_cell(cch->table, hst->key);
 
@@ -170,8 +192,11 @@ int cache_update(TCache* cch
             hst->node = list_get_head(cch->list);
 
         } else {
-            hst->node = NULL; // DEBUG
             rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
+
+            #ifdef DEBUGON
+                hst->node = NULL;
+            #endif
         }
     }
 

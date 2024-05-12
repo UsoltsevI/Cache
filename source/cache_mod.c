@@ -1,3 +1,19 @@
+//------------------------------------------------------------------------------
+//
+// Cache LRU-K implementation
+// 
+//------------------------------------------------------------------------------
+//
+// This file implements a different algorithm from the 
+// classical one for processing cases when less than K 
+// elements are stored in the page histories.
+//
+// If a page has less than K elements stored in the page 
+// history, then we simply look at its last recorded 
+// element as the kth, sorting in the tree by its value.
+//
+//------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/cache.h"
@@ -52,50 +68,31 @@ int cache_update(TCache* cch
 
     ++(cch->iteration);
 
-    // we are looking among the open pages
     THist* hst = table_search_cell(cch->table, key);
     
-    if (hst != NULL) { // hit!
-        // if the lst is found, then we update 
-        // the information in the cch->list and in the cch->tree
-
-        // deleting the cell from the cch->tree
+    // hit
+    if (hst != NULL) {
         rbtree_delete(cch->tree, hst->itr, &compare_hist_itr);
 
-        // adding the new page to the head of the list
         queue_add_to_head(hst->queue, cch->iteration);
 
-        // updating the hst->time value
         hst->itr = queue_get_tail(hst->queue);
 
-        // adding the new tail to the ссh->tree
         rbtree_insert(cch->tree, hst->itr, hst, &compare_hist_itr);
 
         return 1;
     }
 
     // miss
-    // if the page was not opened
-    // we are checking if we still have free slots for the page
     if (cch->cur_lst == cch->size) {
-        // if there are no free ones left, 
-        // then we remove the minimum value from the cch->tree,
-        // and in its place we will write the next value
         hst = tree_delete_min(cch->tree, &compare_hist_itr);
+
+        table_delete_cell(cch->table, hst->page);
+        queue_clean(hst->queue);
 
 #ifdef CACHE_DEBUGON
         printf("del->time = %lu\n", hst->itr);
 #endif
-        // deleting the list from the cch->table
-        table_delete_cell(cch->table, hst->page);
-
-#ifdef CACHE_PAGE_LINKS_ON
-        // writing down the value of the closed page
-        *to_close = hst->page
-#endif
-
-        // deleting elements from list
-        queue_clean(hst->queue);
 
         hst->page = get_page(key);
         hst->itr  = cch->iteration;
@@ -105,8 +102,6 @@ int cache_update(TCache* cch
         rbtree_insert(cch->tree, hst->itr, hst, &compare_hist_itr);
 
     } else {
-        // if there are still free lists left, 
-        // just write them down there
         hst = &cch->histories[cch->cur_lst];
 
         hst->page = get_page(key);
