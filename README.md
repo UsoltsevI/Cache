@@ -8,18 +8,21 @@ Testing functions are also written. The first is to check the correctness of the
 
 The main cache function returns 0 if miss and 1 if hit. It is also possible to receive information about which page to close. See a more detailed description in [/include/cache.h](/include/cache.h). You can also customize typedef to suit your needs, changing it only in cache.h.
 
-
 ### Algorithm
 The main idea of the LRU-K algorithm is that it records the history (time of the last K hits) for each open page. And when it becomes necessary to open some new page, It closes the one where the Kth appeal was the earliest.
+
+In the cache.c implementation, if a page has less than K hits recorded in its history, then the kth hit is counted at minus infinity. And then this page is written not to the tree, but to the linked list. In case of a miss, we first look at the presence of elements in the list and remove the last one from there, if they are not there, then we find the minimum element in the tree and delete it. See the implementation diagram below.
+
+In cache_mod.c implementation, we always look at the last call that is less than or equal to K. In this case, we do not need a linked list.
 
 ### Implementation
 The figure below shows an example of dependencies inside the cache function in our implementation:
 
-![structure](/documents/Illust.png)
-
-And the cache_version2 has the following structure:
-
 ![structure](/documents/Illust3.png)
+
+And the cache_mod has the following structure:
+
+![structure](/documents/Illust.png)
 
 The [hash table](https://en.wikipedia.org/wiki/Hash_table) is implemented by the chaining method. A [red-black tree](https://en.wikipedia.org/wiki/Red–black_tree) is also used to quickly find the smallest element. Red-black tree is selected because inserts and deletes are needed much more often in this algorithm than searches.
 
@@ -31,59 +34,26 @@ LRU, unlike LRU-K, works in O(1) because you don't have to look for the smallest
 ## Usage
 To install this repository tap in your console:
 ```
-$ git clone git@github.com:UsoltsevI/Cache.git
+git clone git@github.com:UsoltsevI/Cache.git
 ```
 
-To create the necessary dependencies:
+To create the necessary dependencies in build folder:
 ```
-$ cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 ```
 
 To create the project library itself and executable files:
 ```
-$ VERBOSE=1 cmake --build ./build
+VERBOSE=1 cmake --build ./build
 ```
-The library will be called `liblruk` and will be located in the build folder
-The library for a regular LRU will be called `liblrulib` and will be located in the build/problem_lc folder
+This command will compile all executable files and libraries into the buildings folder.
+
+The library will be called `liblruk` and will be located in the build folder.
+The library for cache_mod will be located there and called `liblrukmod`.
+The library for a regular LRU will be called `liblrulib` and will be located in the build/problem_lc folder.
 
 ## Test results
 The section will be finalized later...
-
-## Cache functions description
-Turn CACHE_PAGE_LINKS_ON on in order to receive information about the page that should be closed.
-
-Included files:
-* <stdio.h>
-
-Typedefs:
-```
-typedef size_t TCacheValue;
-typedef size_t TCacheTime;
-
-typedef struct cache TCache;
-typedef struct history THist;
-```
-
-Functions:
-```
-// constructor
-// size == number of stored pages
-struct cache* create_cache(size_t size, size_t k);
-
-// updates cache, adds a link to the 
-// page to be closed to to_close
-// returns 0 if miss, returns 1 if hit
-int cache(struct cache* cch
-            , const TCacheValue page
-            , TCacheTime time
-#ifdef CACHE_PAGE_LINKS_ON
-            , TCacheValue* to_close
-#endif
-            );
-
-// destructor
-void delete_cache(struct cache* cch);
-```
 
 ## Useful links
 * [Cache replacement policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
@@ -92,6 +62,7 @@ void delete_cache(struct cache* cch);
 * [Cache_(computing)](https://en.wikipedia.org/wiki/Cache_(computing))
 * [Full Stack Development](https://roadmap.sh/full-stack)
 * [How to write README.md](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+* [red-black tree](https://en.wikipedia.org/wiki/Red–black_tree) 
 * [Eng_LRU_K](/documents/Eng_LRU_K.pdf)
 
 In Russian:
