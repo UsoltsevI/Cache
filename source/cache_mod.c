@@ -6,9 +6,9 @@
 #include "../include/tree.h"
 
 struct history {
-    TQueue* list;
+    TQueue* queue;
     TCachePage page;
-    TCacheKey  time;
+    TCacheKey  itr;
 };
 
 struct cache {
@@ -21,20 +21,8 @@ struct cache {
     size_t iteration;
 };
 
-int compare_hist_time(void* first, void* second) {
-    THist* first_struct  = (THist*) first;
-    THist* second_struct = (THist*) second;
-#if 1
-    if (first_struct->time < second_struct->time) {
-        return -1;
-    } else if (first_struct->time > second_struct->time) {
-        return 1;
-    }
-
-    return 0;
-#else
-    return first_struct->time - second_struct->time;
-#endif
+int compare_hist_itr(void* first, void* second) {
+    return *((size_t*) first) - *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -44,12 +32,12 @@ TCache* create_cache(size_t size, size_t k) {
     cch->k    = k;
 
     cch->table = create_table(cch->size);
-    cch->tree  = rbtree_create();
+    cch->tree  = rbtree_create(cch->size);
 
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
     for (size_t i = 0; i < cch->size; ++i) {
-        cch->histories[i].list = create_queue(cch->k);
+        cch->histories[i].queue = create_queue(cch->k);
     }
 
     cch->cur_lst = 0;
@@ -72,16 +60,16 @@ int cache_update(TCache* cch
         // the information in the cch->list and in the cch->tree
 
         // deleting the cell from the cch->tree
-        rbtree_delete(cch->tree, hst, &compare_hist_time);
+        rbtree_delete(cch->tree, hst->itr, &compare_hist_itr);
 
         // adding the new page to the head of the list
-        queue_add_to_head(hst->list, cch->iteration);
+        queue_add_to_head(hst->queue, cch->iteration);
 
         // updating the hst->time value
-        hst->time = queue_get_tail(hst->list);
+        hst->itr = queue_get_tail(hst->queue);
 
         // adding the new tail to the ссh->tree
-        rbtree_insert(cch->tree, hst, &compare_hist_time);
+        rbtree_insert(cch->tree, hst->itr, hst, &compare_hist_itr);
 
         return 1;
     }
@@ -93,38 +81,40 @@ int cache_update(TCache* cch
         // if there are no free ones left, 
         // then we remove the minimum value from the cch->tree,
         // and in its place we will write the next value
-        THist* del = tree_delete_min(cch->tree, &compare_hist_time);
+        hst = tree_delete_min(cch->tree, &compare_hist_itr);
 
 #ifdef CACHE_DEBUGON
-        printf("del->time = %lu\n", del->time);
+        printf("del->time = %lu\n", hst->itr);
 #endif
         // deleting the list from the cch->table
-        table_delete_cell(cch->table, del->page);
+        table_delete_cell(cch->table, hst->page);
 
 #ifdef CACHE_PAGE_LINKS_ON
         // writing down the value of the closed page
-        *to_close = del->page
+        *to_close = hst->page
 #endif
 
         // deleting elements from list
-        queue_clean(del->list);
+        queue_clean(hst->queue);
 
-        del->page = get_page(key);
-        del->time = cch->iteration;
+        hst->page = get_page(key);
+        hst->itr  = cch->iteration;
 
-        table_add_value(cch->table, del, key);
-        queue_add_to_head(del->list, del->time);
-        rbtree_insert(cch->tree, del, &compare_hist_time);
+        table_add_value(cch->table, hst, key);
+        queue_add_to_head(hst->queue, hst->itr);
+        rbtree_insert(cch->tree, hst->itr, hst, &compare_hist_itr);
 
     } else {
         // if there are still free lists left, 
         // just write them down there
-        cch->histories[cch->cur_lst].page = get_page(key);
-        cch->histories[cch->cur_lst].time = cch->iteration;
+        hst = &cch->histories[cch->cur_lst];
 
-        table_add_value(cch->table, &cch->histories[cch->cur_lst], cch->histories[cch->cur_lst].page);
-        rbtree_insert(cch->tree, &cch->histories[cch->cur_lst], &compare_hist_time);
-        queue_add_to_head(cch->histories[cch->cur_lst].list, cch->iteration);
+        hst->page = get_page(key);
+        hst->itr  = cch->iteration;
+
+        table_add_value(cch->table, hst, key);
+        rbtree_insert(cch->tree, hst->itr, hst, &compare_hist_itr);
+        queue_add_to_head(hst->queue, cch->iteration);
 
         cch->cur_lst += 1;
     }
@@ -137,7 +127,7 @@ void delete_cache(TCache* cch) {
     rbtree_clean(cch->tree);
 
     for (size_t i = 0; i < cch->size; ++i) {
-        queue_delete(cch->histories[i].list);
+        queue_delete(cch->histories[i].queue);
     }
 
     free(cch->histories);

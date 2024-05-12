@@ -27,20 +27,9 @@ struct history {
 };
 
 static const size_t MINUS_INF = 0;
-int compare_hist_itr(void* first, void* second) {
-    THist* first_struct  = (THist*) first;
-    THist* second_struct = (THist*) second;
-#if 1
-    if (first_struct->last_itr < second_struct->last_itr) {
-        return -1;
-    } else if (first_struct->last_itr > second_struct->last_itr) {
-        return 1;
-    }
 
-    return 0;
-#else
-    return first_struct->last_itr - second_struct->last_itr;
-#endif
+int compare_hist_itr(void* first, void* second) {
+    return *((size_t*) first) - *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -50,7 +39,7 @@ TCache* create_cache(size_t size, size_t k) {
     cch->k    = k;
 
     cch->table = create_table(cch->size);
-    cch->tree  = rbtree_create();
+    cch->tree  = rbtree_create(cch->size);
     cch->list  = create_list(cch->size);
 
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
@@ -82,14 +71,14 @@ int cache_update(TCache* cch
             if (hst->last_itr != MINUS_INF) {
                 list_delete_node(cch->list, hst->node);
                 hst->node = NULL; // DEBUG
-                rbtree_insert(cch->tree, hst, &compare_hist_itr);
+                rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
 
             } else {
                 list_move_to_head(cch->list, hst->node);
             }
 
         } else {
-            rbtree_delete(cch->tree, hst, &compare_hist_itr);
+            rbtree_delete(cch->tree, hst->last_itr, &compare_hist_itr);
 
             queue_add_to_head(hst->queue, cch->iteration);
 
@@ -98,14 +87,14 @@ int cache_update(TCache* cch
             assert(hst->last_itr != MINUS_INF); // DEBUG
             assert(hst->node == NULL);          // DEBUG
 
-            rbtree_insert(cch->tree, hst, &compare_hist_itr);
+            rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
         }
 
         return 1;
     }
 
     if (cch->cur_hst == cch->size) {
-        if (list_num_elem(cch->list) > 0) {
+        if (list_get_head(cch->list) == NULL) {
             hst = list_get_value(list_get_tail(cch->list));
 
             assert(hst->node != NULL);          // DEBUG
@@ -130,7 +119,7 @@ int cache_update(TCache* cch
             } else {
                 list_delete_node(cch->list, hst->node);
                 hst->node = NULL; // DEBUG
-                rbtree_insert(cch->tree, hst, &compare_hist_itr);
+                rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
             }
 
         } else {
@@ -157,7 +146,7 @@ int cache_update(TCache* cch
                 hst->node = list_get_head(cch->list);
 
             } else {
-                rbtree_insert(cch->tree, hst, &compare_hist_itr);
+                rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
             }
         }
 
@@ -182,7 +171,7 @@ int cache_update(TCache* cch
 
         } else {
             hst->node = NULL; // DEBUG
-            rbtree_insert(cch->tree, hst, &compare_hist_itr);
+            rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
         }
     }
 
