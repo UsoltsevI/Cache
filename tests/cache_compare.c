@@ -1,3 +1,19 @@
+//--------------------------------------------------------------------------------------------------
+//
+// Input: length of LRU and parameters of LRU-K
+// Output: csv file with time and hits for arrays with diffrent length
+//
+// You can use diffrent options for distributing values in arrays
+// For this you can sumbit code words to main in first argument:
+// fluct - to fluctuate values within a random number +- HIGHT_FLUCT and with length = LENGTH_FLUCT
+// saw - to monotonically increasing values with step 1 from random value to random value + SIZE_SAW
+// Deafault distributing values in arrays is random in range from 0 to MAX_RANDOM
+//
+// If you want to use your name of file with results you can write it in second argument of main
+// Deafault name of file with results is res_compare.csv
+//
+//--------------------------------------------------------------------------------------------------
+
 #include "../problem_lc/include/cache.h"
 #include "../include/cache.h"
 #include <stdio.h>
