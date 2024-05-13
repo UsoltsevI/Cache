@@ -1,1 +1,0 @@
-/usr/bin/cc -O3 -DNDEBUG CMakeFiles/lrukmod.x.dir/main.c.o -o lrukmod.x  liblrukmod.a 

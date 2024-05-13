@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblrukmod.a CMakeFiles/lrukmod.dir/source/cache_mod.c.o CMakeFiles/lrukmod.dir/source/hash.c.o CMakeFiles/lrukmod.dir/source/queue.c.o CMakeFiles/lrukmod.dir/source/tree.c.o
-/usr/bin/ranlib liblrukmod.a
