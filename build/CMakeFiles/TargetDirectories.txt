@@ -1,0 +1,11 @@
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/lrukmod.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/lrukmod.x.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/cache_compare.x.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/lruk.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/lruk.x.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/edit_cache.dir
+/home/daddy/Документы/C_projects/Cache/build/CMakeFiles/rebuild_cache.dir
+/home/daddy/Документы/C_projects/Cache/build/problem_lc/CMakeFiles/lrulib.dir
+/home/daddy/Документы/C_projects/Cache/build/problem_lc/CMakeFiles/lru.x.dir
+/home/daddy/Документы/C_projects/Cache/build/problem_lc/CMakeFiles/edit_cache.dir
+/home/daddy/Документы/C_projects/Cache/build/problem_lc/CMakeFiles/rebuild_cache.dir

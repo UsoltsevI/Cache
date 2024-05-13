@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblruk.a CMakeFiles/lruk.dir/source/cache.c.o CMakeFiles/lruk.dir/source/hash.c.o CMakeFiles/lruk.dir/source/queue.c.o CMakeFiles/lruk.dir/source/tree.c.o CMakeFiles/lruk.dir/source/list.c.o
+/usr/bin/ranlib liblruk.a

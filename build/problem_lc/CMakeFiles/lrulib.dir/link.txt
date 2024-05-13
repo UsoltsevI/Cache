@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblrulib.a CMakeFiles/lrulib.dir/source/cache.c.o CMakeFiles/lrulib.dir/source/hash.c.o CMakeFiles/lrulib.dir/source/list.c.o
+/usr/bin/ranlib liblrulib.a
