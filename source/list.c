@@ -135,6 +135,23 @@ void list_clean(TList* list) {
     list->is_empty = 1;
 }
 
+void list_delete_node(TList* list, TNode* node) {
+    if (node == list->fact_tail) {
+        list->fact_tail = list->fact_tail->prev;
+        return;
+    }
+
+    if (node == list->head) {
+        list->head = list->head->next;
+        return;
+    }
+
+    node->prev->next = node->next;
+    node->prev = list->fact_tail;
+    node->next = list->fact_tail->next;
+    list->fact_tail->next = node;
+}
+
 void list_dump(TList* list) {
     TNode* list_temp = list->head;
 

@@ -33,4 +33,6 @@ void list_set_value (TNode* node, TListValue value);
 
 TListValue list_get_value(TNode* node);
 
+void list_delete_node(TList* list, TNode* node);
+
 #endif // LIST_H
