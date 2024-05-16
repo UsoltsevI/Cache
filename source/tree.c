@@ -4,13 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-struct cells {
-    node* cells;
-    node free_cell;
-};
-
-typedef struct cells* TreeCells;
-
 struct rbtree_node_t {
     size_t key;
     TTreeContent data;
@@ -24,7 +17,6 @@ struct rbtree_node_t {
 
 struct rbtree_t {
     rbtree_node root;
-    TreeCells memory;
 };
 
 static node grandparent (node n);
@@ -41,7 +33,7 @@ static void property_5 (node root);
 static void property_5_helper (node n, int black_count, int* black_count_path);
 #endif
 
-static node new_node (TreeCells memory, size_t key, TTreeContent data, color node_color, node left, node right);
+static node new_node (size_t key, TTreeContent data, color node_color, node left, node right);
 static node lookup_node (rbtree t, size_t key, compare_func compare);
 static void rotate_left (rbtree t, node n);
 static void rotate_right (rbtree t, node n);
@@ -61,9 +53,6 @@ static void delete_case5 (rbtree t, node n);
 static void delete_case6 (rbtree t, node n);
 
 static void tree_search_min (node n, node* min, compare_func compare);
-
-TreeCells create_cells (size_t size);
-node get_free_cell (TreeCells memory);
 
 void draw_tree_1 (FILE* save, node tree, int* node_num);
 
@@ -167,7 +156,7 @@ void property_5_helper (node n, int black_count, int* path_black_count) {
 }
 #endif
 
-rbtree rbtree_create (size_t size) {
+rbtree rbtree_create () {
     rbtree t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
 
@@ -175,27 +164,11 @@ rbtree rbtree_create (size_t size) {
     verify_properties(t);
 #endif
 
-    t->memory = create_cells(size);
-
     return t;
 }
 
-TreeCells create_cells (size_t size) {
-    TreeCells memory = (TreeCells)calloc(1, sizeof(struct cells));
-    memory->cells = (node*)calloc(size, sizeof(struct rbtree_node_t));
-    memory->free_cell = memory->cells[0];
-
-    return memory;
-}
-
-node get_free_cell (TreeCells memory) {
-    node free_cell = memory->free_cell;
-    memory->free_cell += 1;
-    return free_cell;
-}
-
-node new_node (TreeCells memory, size_t key, TTreeContent data, color node_color, node left, node right) {
-    node result = get_free_cell(memory);
+node new_node (size_t key, TTreeContent data, color node_color, node left, node right) {
+    node result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;
     result->color = node_color;
     result->left = left;
@@ -284,7 +257,7 @@ void replace_node (rbtree t, node oldn, node newn) {
 }
 
 void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare) {
-    node inserted_node = new_node(t->memory, key, data, RED, NULL, NULL);
+    node inserted_node = new_node(key, data, RED, NULL, NULL);
 
     if (t->root == NULL) {
         t->root = inserted_node;
@@ -414,8 +387,7 @@ void rbtree_delete (rbtree t, size_t key, compare_func compare) {
     if (n->parent == NULL && child != NULL) {
         child->color = BLACK;
     }
-    t->memory->free_cell = n;
-    n->key = 0;
+    free(n);
 
 #ifdef TREE_DEBUGON
     verify_properties(t);
