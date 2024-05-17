@@ -108,6 +108,7 @@ void list_clean(TList* list) {
 void list_delete_node(TList* list, TNode* node) {
     if (list->fact_tail == node && list->head == node) {
         list->is_empty = 1;
+        return;
     }
 
     if (node == list->fact_tail) {
@@ -128,7 +129,7 @@ void list_delete_node(TList* list, TNode* node) {
 
     node->next = list->fact_tail->next;
     list->fact_tail->next->prev = node;
-    
+
     list->fact_tail->next = node;
 }
 
