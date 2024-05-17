@@ -40,7 +40,7 @@ int main() {
         num_hit += last;
 
 #ifdef CACHE_DEBUGON
-        printf("%lu: %lu: %lu\n", i, next, last);
+        printf("number: %lu, page: %lu, result: %lu\n", i, next, last);
         // cache_dump(cch);
 #endif
     }
