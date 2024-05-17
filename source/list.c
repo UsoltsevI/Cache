@@ -63,11 +63,14 @@ void delete_list (TList* list) {
 }
 
 TNode* list_add_to_head(TList* list, TListValue val) {
-    list->is_empty = 0;
-
     list->tail->val = val;
     list->head = list->tail;
     list->tail = list->tail->prev;
+
+    if (list->is_empty) {
+        list->fact_tail = list->head;
+        list->is_empty = 0;
+    }
 
     return list->head;
 }
@@ -148,6 +151,7 @@ void list_delete_node(TList* list, TNode* node) {
 
     if (node == list->head) {
         list->head = list->head->next;
+        list->tail = list->tail->next;
         return;
     }
 
@@ -155,10 +159,10 @@ void list_delete_node(TList* list, TNode* node) {
     node->next->prev = node->prev;
 
     node->prev = list->fact_tail;
-    list->fact_tail->next = node;
-
     node->next = list->fact_tail->next;
+
     list->fact_tail->next->prev = node;
+    list->fact_tail->next = node;
 
     list->fact_tail->next = node;
 }
