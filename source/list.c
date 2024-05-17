@@ -167,20 +167,22 @@ void list_delete_node(TList* list, TNode* node) {
     list->fact_tail->next = node;
 }
 
-void list_dump(TList* list) {
-    TNode* list_temp = list->head;
+#ifdef CACHE_DEBUGON
+    void list_dump(TList* list) {
+        TNode* list_temp = list->head;
 
-    for (size_t i = 0; i < list->size; ++i) {
-        if (list_temp == list->fact_tail) {
-            printf("FACT_TAIL ");
+        for (size_t i = 0; i < list->size; ++i) {
+            if (list_temp == list->fact_tail) {
+                printf("FACT_TAIL ");
+            }
+            if (list_temp->val == LISTGARBAGE) {
+                printf("(nil) -> ");
+            } else {
+                printf("(%p, %d) -> ", list_temp->val, hist_get_key(list_temp->val));
+            }
+            list_temp = list_temp->next;
         }
-        if (list_temp->val == LISTGARBAGE) {
-            printf("(nil) -> ");
-        } else {
-            printf("(%p, %d) -> ", list_temp->val, hist_get_key(list_temp->val));
-        }
-        list_temp = list_temp->next;
+
+        printf("NULL\n");
     }
-
-    printf("NULL\n");
-}
+#endif

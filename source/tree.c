@@ -512,7 +512,10 @@ void tree_search_min (node n, node* min, compare_func compare) {
 }
 
 void rbtree_clean (rbtree t) {
-    rbtree_clean_(t->root);
+    if (t->root != NULL) {
+        rbtree_clean_(t->root);
+    }
+    
     free(t);
 }
 

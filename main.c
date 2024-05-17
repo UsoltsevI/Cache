@@ -20,7 +20,6 @@
 TCachePage get_page(int key) {
     return key;
 }
-#define CACHE_DEBUGON
 
 int main() {
     size_t m, n;
@@ -30,7 +29,7 @@ int main() {
 
     res = scanf("%lu%lu", &m, &n);
 
-    cch = create_cache(m, 2);
+    cch = create_cache(m, 5);
 
     for (size_t i = 0; i < n; ++i) {
         size_t next;
@@ -40,7 +39,7 @@ int main() {
         num_hit += last;
 
 #ifdef CACHE_DEBUGON
-        printf("number: %lu, page: %lu, result: %lu\n", i, next, last);
+        printf("number: %lu, page: %lu, result: %lu\n\n", i, next, last);
         // cache_dump(cch);
 #endif
     }
