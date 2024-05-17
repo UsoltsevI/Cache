@@ -140,11 +140,6 @@ int main()
             printf("1");
         }
     }
-    for (int j=0;j<m;j++)
-    {
-
-        printf("%d",cache[j].hpage);
-    }
 for (int j=0;j<m;j++)
     {
 
