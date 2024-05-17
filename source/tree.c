@@ -550,10 +550,10 @@ void rbtree_clean_ (node t) {
         tree->num_in_tree = *node_num;
 
         if (tree->color == BLACK) {
-            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = black, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_time(tree->key), '"');
+            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = black, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_key(tree->data), '"');
         }
         else if (tree->color == RED) {
-            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = red, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_time(tree->key), '"');
+            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = red, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_key(tree->data), '"');
         }
 
         if (tree->left != NULL) {
@@ -585,7 +585,7 @@ void rbtree_clean_ (node t) {
             node_dump(n->left);
         }
 
-        printf("%d", hist_get_time(n->key));
+        printf("%d", hist_get_key(n->data));
 
         if (n->right) {
             node_dump(n->right);

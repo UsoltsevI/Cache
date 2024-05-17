@@ -167,7 +167,14 @@ void list_dump(TList* list) {
     TNode* list_temp = list->head;
 
     for (size_t i = 0; i < list->size; ++i) {
-        printf("%ld ->", list_temp->val);
+        if (list_temp == list->fact_tail) {
+            printf("FACT_TAIL ");
+        }
+        if (list_temp->val == LISTGARBAGE) {
+            printf("(nil) -> ");
+        } else {
+            printf("(%p, %d) -> ", list_temp->val, hist_get_key(list_temp->val));
+        }
         list_temp = list_temp->next;
     }
 

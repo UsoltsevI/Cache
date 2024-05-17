@@ -70,6 +70,17 @@ TCache* create_cache(size_t size, size_t k) {
     return cch;
 }
 
+void print_cache_opened_pages(TCache* cch) {
+    printf("OPENED PAGES: ");
+    for (size_t i = 0; i < cch->cur_hst; i++) {
+        printf("%ld ", cch->histories[i].key);
+    }
+
+    printf("\n");
+}
+
+// #define NDEBUG
+
 int cache_update(TCache* cch
             , int key
             , TCachePage (*get_page) (int)) {
@@ -78,25 +89,43 @@ int cache_update(TCache* cch
 
     THist* hst = table_search_cell(cch->table, key);
 
+#ifdef CACHE_DEBUGON
+    print_cache_opened_pages(cch);
+    printf("new key: %d\n", key);
+    list_dump(cch->list);
+#endif
+
     if (hst != NULL) {
         if (hst->last_itr == MINUS_INF) {
+        #ifdef CACHE_DEBUGON
+            printf("hit from list\n");
+        #endif
+
             queue_add_to_head(hst->queue, cch->iteration);
 
             hst->last_itr = queue_get_tail(hst->queue);
 
             if (hst->last_itr != MINUS_INF) {
+                assert(hst->node != NULL);
+
                 list_delete_node(cch->list, hst->node);
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
 
-                #ifdef DEBUGON
-                    hst->node = NULL;
-                #endif
+            #ifndef NDEBUG
+                hst->node = NULL;
+            #endif
+                assert(hst->node == NULL);
 
             } else {
+                assert(hst->node != NULL);
                 list_move_to_head(cch->list, hst->node);
             }
 
         } else {
+        #ifdef CACHE_DEBUGON
+            printf("hit from tree\n");
+        #endif
+
             rbtree_delete(cch->tree, hst->last_itr, &compare_hist_itr);
 
             queue_add_to_head(hst->queue, cch->iteration);
@@ -113,8 +142,20 @@ int cache_update(TCache* cch
     }
 
     if (cch->cur_hst == cch->size) {
-        if (list_get_head(cch->list) == NULL) {
+    #ifdef CACHE_DEBUGON
+        printf("replace old\n");
+    #endif
+
+        if (list_get_head(cch->list) != NULL) {
+        #ifdef CACHE_DEBUGON
+            printf("from list\n");
+        #endif
+
             hst = list_get_value(list_get_tail(cch->list));
+        #ifdef CACHE_DEBUGON
+            printf("hst->node = %p\n", hst->node);
+            printf("hst->key  = %p\n", hst->key );
+        #endif
 
             assert(hst->node != NULL);
             assert(hst->last_itr == MINUS_INF);
@@ -133,18 +174,29 @@ int cache_update(TCache* cch
             table_add_value(cch->table, hst, key);
 
             if (hst->last_itr == MINUS_INF) {
+                assert(hst->node != NULL);
                 list_move_to_head(cch->list, hst->node);
 
             } else {
+                assert(hst->node != NULL);
                 list_delete_node(cch->list, hst->node);
+
+                // assert(hst->node == NULL);
+
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
             
-                #ifdef DEBUGON
-                    hst->node = NULL;
-                #endif
+            #ifndef NDEBUG
+                hst->node = NULL;
+            #endif
+                assert(hst->node == NULL);
+
             }
 
         } else {
+        #ifdef CACHE_DEBUGON
+            printf("from tree\n");
+        #endif
+
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
 
             assert(hst->node == NULL);
@@ -166,13 +218,23 @@ int cache_update(TCache* cch
             if (hst->last_itr == MINUS_INF) {
                 list_add_to_head(cch->list, hst);
                 hst->node = list_get_head(cch->list);
+                assert(hst->node != NULL);
 
             } else {
+                assert(hst->node == NULL);
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
+                #ifndef NDEBUG
+                    hst->node = NULL;
+                #endif
+                assert(hst->node == NULL);
             }
         }
 
     } else {
+    #ifdef CACHE_DEBUGON
+        printf("from accumulator\n");
+    #endif
+
         hst = &cch->histories[cch->cur_hst];
 
         cch->cur_hst += 1;
@@ -188,15 +250,29 @@ int cache_update(TCache* cch
         table_add_value(cch->table, hst, key);
         
         if (hst->last_itr == MINUS_INF) {
+        #ifdef CACHE_DEBUGON
+            printf("to list\n");
+        #endif
+
             list_add_to_head(cch->list, hst);
             hst->node = list_get_head(cch->list);
+            assert(hst->node != NULL);
+
+        #ifdef CACHE_DEBUGON
+            printf("hst->node = %p\n", hst->node);
+        #endif
 
         } else {
+        #ifdef CACHE_DEBUGON
+            printf("to tree\n");
+        #endif
+
             rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
 
-            #ifdef DEBUGON
+            #ifndef NDEBUG
                 hst->node = NULL;
             #endif
+            assert(hst->node == NULL);
         }
     }
 
@@ -215,3 +291,9 @@ void delete_cache(TCache* cch) {
     free(cch->histories);
     free(cch);
 }
+
+#ifdef CACHE_DEBUGON
+    TCacheKey hist_get_key(THist* hist) {
+        return hist->key;
+    }
+#endif

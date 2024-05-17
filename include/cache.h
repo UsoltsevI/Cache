@@ -30,11 +30,12 @@ int cache_update(TCache* cch
 
 void delete_cache(TCache* cch);
 
-// #define CACHE_DEBUGON
+#define CACHE_DEBUGON
 #ifdef CACHE_DEBUGON
-    void hist_dump(THist* hist);
-    void cache_dump(struct cache* cch);
-    TCacheTime hist_get_time(THist* hist);
+    // void hist_dump(THist* hist);
+    // void cache_dump(struct cache* cch);
+
+    TCacheKey hist_get_key(THist* hist);
 #endif
 
 #endif // CACHE_H
