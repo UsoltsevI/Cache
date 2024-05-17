@@ -491,14 +491,14 @@ void delete_case6 (rbtree t, node n) {
     }
 }
 
-size_t tree_delete_min (rbtree t, compare_func compare) {
+TTreeContent tree_delete_min (rbtree t, compare_func compare) {
     node min = t->root;
     tree_search_min(t->root, &min, compare);
     
-    size_t res = min->key;
+    TTreeContent data = min->data;
 
     rbtree_delete(t, min->key, compare);
-    return res;
+    return data;
 }
 
 void tree_search_min (node n, node* min, compare_func compare) {

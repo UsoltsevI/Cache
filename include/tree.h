@@ -28,7 +28,7 @@ int compare_time(void* leftp, void* rightp);
 typedef rbtree_node node;
 typedef enum rbtree_node_color color;
 
-size_t tree_delete_min (rbtree t, compare_func compare);
+TTreeContent tree_delete_min (rbtree t, compare_func compare);
 
 void rbtree_clean (rbtree t);
 
