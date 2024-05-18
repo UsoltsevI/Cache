@@ -1,3 +1,4 @@
 example.csv
 build
 .vscode
+.gitignore
