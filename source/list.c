@@ -3,21 +3,27 @@
 
 #include "../include/list.h"
 
-struct node {
+// ----------------------
+//
+// this is an implementation of the "list" data structure.
+//
+// ----------------------
+
+struct node { // node of the list
     struct node* next;
     struct node* prev; 
     TListValue val;
 };
 
 struct list {
-    struct node* head;
-    struct node* tail;                                              
-    struct node* fact_tail;
+    struct node* head; // ptr to head
+    struct node* tail; // ptr to tail                                         
+    struct node* fact_tail; // ptr to last not empty element of list ( if list is full -> tail = fact_tail )
     size_t size;
-    int is_empty;
+    int is_empty; // list emptiness indicator
 };
 
-const int LISTGARBAGE = -1;
+TListValue LISTGARBAGE = NULL;
 
 TList* create_list (size_t number_of_elements){
     TList* list = (TList*) calloc(1, sizeof(TList));

@@ -4,6 +4,19 @@
 #include <string.h>
 #include <stdio.h>
 
+// ----------------------------------------
+//
+// The implementation of red-black tree
+//
+// The Properties
+// 1. Each node is either red or black:
+// 2. The root node is black.
+// 3. All leaves (shown as NIL in the above diagram) are black and contain no data. Since we represent these empty leaves using NULL, this property is implicitly assured by always treating NULL as black. To this end we create a node_color() helper function:
+// 4. Every red node has two children, and both are black (or equivalently, the parent of every red node is black).
+// 5. All paths from any given node to its leaf nodes contain ithe same number of black node.
+//
+// ----------------------------------------
+
 struct rbtree_node_t {
     size_t key;
     TTreeContent data;
