@@ -7,6 +7,7 @@
 // For this you can sumbit code words to main in first argument:
 // fluct - to fluctuate values within a random number +- HIGHT_FLUCT and with length = LENGTH_FLUCT
 // saw - to monotonically increasing values with step 1 from random value to random value + SIZE_SAW
+// rand - to distributing values in arrays is random in range from 0 to MAX_RANDOM
 // Deafault distributing values in arrays is random in range from 0 to MAX_RANDOM
 //
 // If you want to use your name of file with results you can write it in second argument of main
@@ -25,9 +26,9 @@
 #include <assert.h>
 #include <string.h>
 #define DEFAULT_FILE "res_compare.csv"
-#define SIZE_SAW 8
+#define SIZE_SAW 50
 #define HIGHT_FLUCT 8
-#define LENGTH_FLUCT 8
+#define LENGTH_FLUCT 100
 #define MAX_RANDOM 50000
 
 int* create_random_arr(size_t size);
@@ -146,13 +147,16 @@ int main(int argc, char* argv[]) {
     }
     fprintf(fl,"\n");
 
-    for(int i = 10; i <= 10000000; i = i * 10) {
+    for(int i = 100; i <= 10000000; i = i * 10) {
         if (argc == 2) {
             if (strcmp(argv[1], "saw") == 0) {
                 arr = create_saw_arr(i);
             }
             else if (strcmp(argv[1], "fluct") == 0) {
                 arr = create_fluct_arr(i);
+            }
+            else if (strcmp(argv[1], "rand") == 0) {
+                arr = create_random_arr(i);
             }
             else {
                 printf("ERROR: wrong name allocation\n");
