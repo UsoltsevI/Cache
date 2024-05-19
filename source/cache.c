@@ -45,19 +45,7 @@ struct history {
 static const size_t MINUS_INF = 0;
 
 int compare_hist_itr(void* first, void* second) {
-    // printf("compare result: %d\n", *((size_t*) first) -  *((size_t*) second));
-    size_t* f = (size_t*) first;
-    size_t* s = (size_t*) second;
-
-    if (*f < *s) {
-        return -1;
-        
-    } else if (*f > *s) {
-        return 1;
-    }
-
-    return 0;
-    // return *((size_t*) first) -  *((size_t*) second);
+    return *((size_t*) first) -  *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -68,7 +56,7 @@ TCache* create_cache(size_t size, size_t k) {
 
     cch->table = create_table(cch->size);
     cch->tree  = rbtree_create(cch->size);
-    cch->list  = create_list(cch->size);
+    cch->list  = create_list(cch->size + 1);
 
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
@@ -91,8 +79,6 @@ void print_cache_opened_pages(TCache* cch) {
     printf("\n");
 }
 
-// #define NDEBUG
-
 int cache_update(TCache* cch
             , int key
             , TCachePage (*get_page) (int)) {
@@ -109,9 +95,8 @@ int cache_update(TCache* cch
     list_verificator(cch->list);
     printf("verifyed \033[97m \n");
     if (cch->iteration > 2) {
-        draw_tree(cch->tree);
+        // draw_tree(cch->tree);
     }
-    // assert(cch->iteration != 15);
 #endif
 
     if (hst != NULL) {
@@ -137,7 +122,6 @@ int cache_update(TCache* cch
 
             } else {
                 assert(hst->node != NULL);
-                // list_move_to_head(cch->list, hst->node);
                 list_delete_node(cch->list, hst->node);
                 list_add_to_head(cch->list, hst);
                 hst->node = list_get_head(cch->list);
@@ -202,7 +186,6 @@ int cache_update(TCache* cch
 
             if (hst->last_itr == MINUS_INF) {
                 assert(hst->node != NULL);
-                // list_move_to_head(cch->list, hst->node);
                 list_delete_node(cch->list, hst->node);
                 list_add_to_head(cch->list, hst);
                 hst->node = list_get_head(cch->list);
@@ -210,8 +193,6 @@ int cache_update(TCache* cch
             } else {
                 assert(hst->node != NULL);
                 list_delete_node(cch->list, hst->node);
-
-                // assert(hst->node == NULL);
 
                 rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
             
@@ -228,7 +209,6 @@ int cache_update(TCache* cch
         #endif
 
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
-            // printf("\033[93m min form three: key: %d last_itr: %lu \033[97m\n", hst->key, hst->last_itr);
 
             assert(hst->node == NULL);
             assert(hst->last_itr != MINUS_INF);
