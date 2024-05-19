@@ -26,7 +26,7 @@
 #include <assert.h>
 #include <string.h>
 #define DEFAULT_FILE "res_compare.csv"
-#define SIZE_SAW 50
+#define SIZE_SAW 1000000
 #define HIGHT_FLUCT 8
 #define LENGTH_FLUCT 100
 #define MAX_RANDOM 50000
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
     int* arr = NULL;
     int* opt = NULL;
     int num_hits = 0;
-    int n = 0, test = 0;
+    int n = 0, test = 0, b = 1;
     clock_t start = 0, end = 0;
     double tm = 0;
 
@@ -146,7 +146,8 @@ int main(int argc, char* argv[]) {
         //fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
     }
    // fprintf(fl,"\n");
-
+   fprintf(fl, "%s,\n", argv[1]);
+//for(int a = 100; a <= 1000000; a = a * 10) {
     for(int i = 1000000; i <= 1000000; i = i * 10) {
         if (argc >= 2) {
             if (strcmp(argv[1], "saw") == 0) {
@@ -167,29 +168,32 @@ int main(int argc, char* argv[]) {
         }
 
         //fprintf(fl, "%i           , ", i);
-        fprintf(fl, "%s,\n", argv[1]);
+        //fprintf(fl, "%s,\n", argv[1]);
 
 
         start = clock();
-        num_hits = get_hits_LRU(arr, i, opt[n * 2]);
+        num_hits = get_hits_LRU(arr, i, opt[n * 2] * b);
         end = clock();
         tm = (double)(end - start) / CLOCKS_PER_SEC;
         //fprintf(fl, "%lf, %i         , ", tm, num_hits);
-        fprintf(fl, "k,     hits,\n");
+        //fprintf(fl, "k,     hits,\n");
         fprintf(fl, "%i,    %i,\n", 0, num_hits);
+        //fprintf(fl, "%lf,   ", tm);
 
         for(int j = 0; j < n; ++j) {
             start = clock();
-            num_hits = get_hits_LRU_K(arr, i, opt[j * 2], opt[j * 2 + 1]);
+            num_hits = get_hits_LRU_K(arr, i, opt[j * 2] * b, opt[j * 2 + 1]);
             end = clock();
             tm = (double)(end - start) / CLOCKS_PER_SEC;
             //fprintf(fl, "%lf     , %i             , ", tm, num_hits);
             fprintf(fl, "%i,        %i,\n", opt[j * 2 + 1], num_hits);
+           // fprintf(fl, "%lf,   ", tm);
         }
-        
+        //b = b * 10;
         fprintf(fl, "\n");
         delete_arr(arr);
     }
+//}
 
     fclose(fl);
     free(opt);
