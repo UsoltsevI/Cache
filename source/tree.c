@@ -73,6 +73,8 @@ void draw_tree_2 (FILE* save, node tree);
 
 void rbtree_clean_ (node t);
 
+void check_node (node t, size_t key, compare_func compare, int* res);
+
 int compare_time(void* leftp, void* rightp) {
     time left = *(time*)leftp;
     time right = *(time*)rightp;
@@ -221,6 +223,18 @@ node lookup_node (rbtree t, size_t key, compare_func compare) {
     return n;
 }
 
+void check_node (node t, size_t key, compare_func compare, int* res) {
+    if (compare(&t->key, &key) == 0)
+        *res = 1;
+    
+    if (t->left != NULL) {
+        check_node(t->left, key, compare, res);
+    }
+    if (t->right != NULL) {
+        check_node(t->right, key, compare, res);
+    }
+}
+
 size_t rbtree_lookup (rbtree t, size_t key, compare_func compare) {
     node n = lookup_node(t, key, compare);
     return n == NULL ? 0 : n->key;
@@ -270,9 +284,11 @@ void replace_node (rbtree t, node oldn, node newn) {
 }
 
 void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare) {
-    if (lookup_node(t, key, compare) != NULL) {
+    
+    int check = 0;
+    check_node(t->root, key, compare, &check);
+    if (check)
         return;
-    }
 
     node inserted_node = new_node(key, data, RED, NULL, NULL);
 
