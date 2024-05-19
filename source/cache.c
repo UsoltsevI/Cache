@@ -45,7 +45,7 @@ struct history {
 static const size_t MINUS_INF = 0;
 
 int compare_hist_itr(void* first, void* second) {
-    return *((size_t*) first) - *((size_t*) second);
+    return *((size_t*) first) -  *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -93,6 +93,13 @@ int cache_update(TCache* cch
     print_cache_opened_pages(cch);
     printf("new key: %d\n", key);
     list_dump(cch->list);
+    printf("\033[96m verify in cache:\n");
+    list_verificator(cch->list);
+    printf("verifyed \033[97m \n");
+    if (cch->iteration == 15) {
+        draw_tree(cch->tree);
+    }
+    // assert(cch->iteration != 15);
 #endif
 
     if (hst != NULL) {
@@ -118,7 +125,10 @@ int cache_update(TCache* cch
 
             } else {
                 assert(hst->node != NULL);
-                list_move_to_head(cch->list, hst->node);
+                // list_move_to_head(cch->list, hst->node);
+                list_delete_node(cch->list, hst->node);
+                list_add_to_head(cch->list, hst);
+                hst->node = list_get_head(cch->list);
             }
 
         } else {
@@ -137,6 +147,10 @@ int cache_update(TCache* cch
 
             rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
         }
+
+    #ifdef CACHE_DEBUGON
+        printf("\n");
+    #endif
 
         return 1;
     }
@@ -175,7 +189,10 @@ int cache_update(TCache* cch
 
             if (hst->last_itr == MINUS_INF) {
                 assert(hst->node != NULL);
-                list_move_to_head(cch->list, hst->node);
+                // list_move_to_head(cch->list, hst->node);
+                list_delete_node(cch->list, hst->node);
+                list_add_to_head(cch->list, hst);
+                hst->node = list_get_head(cch->list);
 
             } else {
                 assert(hst->node != NULL);
@@ -198,6 +215,7 @@ int cache_update(TCache* cch
         #endif
 
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
+            printf("\033[93m min form three: key: %d last_itr: %lu \033[97m\n", hst->key, hst->last_itr);
 
             assert(hst->node == NULL);
             assert(hst->last_itr != MINUS_INF);
@@ -275,6 +293,10 @@ int cache_update(TCache* cch
             assert(hst->node == NULL);
         }
     }
+
+#ifdef CACHE_DEBUGON
+    printf("\n");
+#endif
 
     return 0;
 }
