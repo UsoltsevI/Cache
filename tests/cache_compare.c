@@ -68,9 +68,9 @@ int* create_fluct_arr(size_t size) {
 
     for(int i = 0; i < size; ++i) {
         if (i % LENGTH_FLUCT == 0) {
-            start = HIGHT_FLUCT + rand() % (INT_MAX - 2 * HIGHT_FLUCT);
+            start = (HIGHT_FLUCT + rand() % (INT_MAX - 2 * HIGHT_FLUCT));
         }
-        arr[i] = start + rand() % (2 * HIGHT_FLUCT) - HIGHT_FLUCT;
+        arr[i] = (start + rand() % (2 * HIGHT_FLUCT) - HIGHT_FLUCT);
     }
 
     return arr;
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
         fl = fopen(DEFAULT_FILE, "w+");
     }
 
-    fprintf(fl, "Num of values, ");
+    //fprintf(fl, "Num of values, ");
     printf("write the number of LRU_K\n");
     test = scanf("%i", &n);
     assert(test == 1);
@@ -137,18 +137,18 @@ int main(int argc, char* argv[]) {
     printf("write length of LRU\n");
     test = scanf("%i", &opt[n * 2]);
     assert(test == 1);
-    fprintf(fl, "LRU time   (len = %i), LRU hits    (len = %i), ", opt[n * 2], opt[n * 2]);
+    //fprintf(fl, "LRU time   (len = %i), LRU hits    (len = %i), ", opt[n * 2], opt[n * 2]);
     for(int t = 0; t < n; ++t) {
         printf("write length and k\n");
         test = scanf("%i %i", &opt[t * 2], &opt[t * 2 + 1]);
         assert(test == 2);
-        fprintf(fl, "LRU_K-%i time  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
-        fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
+        //fprintf(fl, "LRU_K-%i time  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
+        //fprintf(fl, "LRU_K-%i hits  (len = %i K = %i), ", t + 1, opt[t * 2], opt[t * 2 + 1]);
     }
-    fprintf(fl,"\n");
+   // fprintf(fl,"\n");
 
-    for(int i = 100; i <= 10000000; i = i * 10) {
-        if (argc == 2) {
+    for(int i = 1000000; i <= 1000000; i = i * 10) {
+        if (argc >= 2) {
             if (strcmp(argv[1], "saw") == 0) {
                 arr = create_saw_arr(i);
             }
@@ -166,20 +166,25 @@ int main(int argc, char* argv[]) {
             arr = create_random_arr(i);
         }
 
-        fprintf(fl, "%i           , ", i);
+        //fprintf(fl, "%i           , ", i);
+        fprintf(fl, "%s,\n", argv[1]);
+
 
         start = clock();
         num_hits = get_hits_LRU(arr, i, opt[n * 2]);
         end = clock();
         tm = (double)(end - start) / CLOCKS_PER_SEC;
-        fprintf(fl, "%lf, %i         , ", tm, num_hits);
+        //fprintf(fl, "%lf, %i         , ", tm, num_hits);
+        fprintf(fl, "k,     hits,\n");
+        fprintf(fl, "%i,    %i,\n", 0, num_hits);
 
         for(int j = 0; j < n; ++j) {
             start = clock();
             num_hits = get_hits_LRU_K(arr, i, opt[j * 2], opt[j * 2 + 1]);
             end = clock();
             tm = (double)(end - start) / CLOCKS_PER_SEC;
-            fprintf(fl, "%lf     , %i             , ", tm, num_hits);
+            //fprintf(fl, "%lf     , %i             , ", tm, num_hits);
+            fprintf(fl, "%i,        %i,\n", opt[j * 2 + 1], num_hits);
         }
         
         fprintf(fl, "\n");
