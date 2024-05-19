@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "../include/list.h"
 
@@ -192,3 +193,11 @@ void list_delete_node(TList* list, TNode* node) {
         printf("NULL\n");
     }
 #endif
+
+void list_verificator (TList* list) {
+    TNode* node = list->head;
+    for (int i = 0; i < list->size; ++i) {
+        node = node->next;
+    }
+    assert(node == list->head);
+}

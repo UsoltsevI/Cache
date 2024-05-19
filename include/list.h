@@ -35,4 +35,6 @@ TListValue list_get_value(TNode* node);
 
 void list_delete_node(TList* list, TNode* node);
 
+void list_verificator (TList* list);
+
 #endif // LIST_H
