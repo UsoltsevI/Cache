@@ -146,8 +146,13 @@ void list_move_to_head(TList* list, TNode* new_head) {
 }
 
 void list_delete_node(TList* list, TNode* node) {
+    if (list->is_empty) {
+        return;
+    }
+
     if (list->fact_tail == node && list->head == node) {
         list->is_empty = 1;
+        list->fact_tail = list->tail;
         return;
     }
 
