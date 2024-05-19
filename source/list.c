@@ -115,36 +115,6 @@ void list_clean(TList* list) {
     list->is_empty = 1;
 }
 
-void list_move_to_head(TList* list, TNode* new_head) {
-    if (new_head == NULL) {
-        return;
-    }
-    
-    if (new_head == list->head) {
-        return;
-    }
-    
-    if (new_head == list->tail) {
-        list->head = new_head;
-        list->tail = new_head->prev;
-        return;
-    }
-
-    if (new_head == list->fact_tail)
-        list->fact_tail = new_head->prev;
-
-    new_head->prev->next = new_head->next;
-    new_head->next->prev = new_head->prev;
-
-    new_head->next = list->head;
-    new_head->prev = list->tail;
-
-    list->head->prev = new_head;
-    list->tail->next = new_head;
-
-    list->head = new_head;
-}
-
 void list_delete_node(TList* list, TNode* node) {
     if (list->is_empty) {
         return;
