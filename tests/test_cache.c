@@ -13,7 +13,7 @@
 #include "../include/cache.h"
 
 TCachePage get_page(int key) {
-  return key;
+    return key;
 }
 
 int main(int argc, char *argv[]) {

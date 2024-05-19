@@ -45,7 +45,19 @@ struct history {
 static const size_t MINUS_INF = 0;
 
 int compare_hist_itr(void* first, void* second) {
-    return *((size_t*) first) - *((size_t*) second);
+    // printf("compare result: %d\n", *((size_t*) first) -  *((size_t*) second));
+    size_t* f = (size_t*) first;
+    size_t* s = (size_t*) second;
+
+    if (*f < *s) {
+        return -1;
+        
+    } else if (*f > *s) {
+        return 1;
+    }
+
+    return 0;
+    // return *((size_t*) first) -  *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -93,6 +105,13 @@ int cache_update(TCache* cch
     print_cache_opened_pages(cch);
     printf("new key: %d\n", key);
     list_dump(cch->list);
+    printf("\033[96m verify in cache:\n");
+    list_verificator(cch->list);
+    printf("verifyed \033[97m \n");
+    if (cch->iteration > 2) {
+        draw_tree(cch->tree);
+    }
+    // assert(cch->iteration != 15);
 #endif
 
     if (hst != NULL) {
@@ -118,7 +137,10 @@ int cache_update(TCache* cch
 
             } else {
                 assert(hst->node != NULL);
-                list_move_to_head(cch->list, hst->node);
+                // list_move_to_head(cch->list, hst->node);
+                list_delete_node(cch->list, hst->node);
+                list_add_to_head(cch->list, hst);
+                hst->node = list_get_head(cch->list);
             }
 
         } else {
@@ -127,6 +149,7 @@ int cache_update(TCache* cch
         #endif
 
             rbtree_delete(cch->tree, hst->last_itr, &compare_hist_itr);
+
 
             queue_add_to_head(hst->queue, cch->iteration);
 
@@ -137,6 +160,10 @@ int cache_update(TCache* cch
 
             rbtree_insert(cch->tree, hst->last_itr, hst, &compare_hist_itr);
         }
+
+    #ifdef CACHE_DEBUGON
+        printf("\n");
+    #endif
 
         return 1;
     }
@@ -175,7 +202,10 @@ int cache_update(TCache* cch
 
             if (hst->last_itr == MINUS_INF) {
                 assert(hst->node != NULL);
-                list_move_to_head(cch->list, hst->node);
+                // list_move_to_head(cch->list, hst->node);
+                list_delete_node(cch->list, hst->node);
+                list_add_to_head(cch->list, hst);
+                hst->node = list_get_head(cch->list);
 
             } else {
                 assert(hst->node != NULL);
@@ -198,6 +228,7 @@ int cache_update(TCache* cch
         #endif
 
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
+            // printf("\033[93m min form three: key: %d last_itr: %lu \033[97m\n", hst->key, hst->last_itr);
 
             assert(hst->node == NULL);
             assert(hst->last_itr != MINUS_INF);
@@ -276,6 +307,10 @@ int cache_update(TCache* cch
         }
     }
 
+#ifdef CACHE_DEBUGON
+    printf("\n");
+#endif
+
     return 0;
 }
 
@@ -295,5 +330,9 @@ void delete_cache(TCache* cch) {
 #ifdef CACHE_DEBUGON
     TCacheKey hist_get_key(THist* hist) {
         return hist->key;
+    }
+
+    size_t hist_get_last_itr(THist* hist) {
+        return hist->last_itr;
     }
 #endif

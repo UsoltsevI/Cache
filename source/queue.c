@@ -1,3 +1,10 @@
+// -------------------------------------------
+//
+// queue implementation
+// in this implementation, you can put elements in the head, and take from the head and tail
+//
+// -------------------------------------------
+
 #include <stdlib.h>
 #include "../include/queue.h"
 

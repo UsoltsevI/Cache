@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+
 struct test_hist {
   int head;
   int tail;

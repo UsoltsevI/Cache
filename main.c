@@ -29,7 +29,7 @@ int main() {
 
     res = scanf("%lu%lu", &m, &n);
 
-    cch = create_cache(m, 5);
+    cch = create_cache(m, 1);
 
     for (size_t i = 0; i < n; ++i) {
         size_t next;

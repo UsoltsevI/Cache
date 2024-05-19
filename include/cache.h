@@ -36,6 +36,7 @@ void delete_cache(TCache* cch);
     // void cache_dump(struct cache* cch);
 
     TCacheKey hist_get_key(THist* hist);
+    size_t hist_get_last_itr(THist* hist);
 #endif
 
 #endif // CACHE_H

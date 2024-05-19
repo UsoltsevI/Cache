@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "../include/list.h"
 
-struct node {
+// ----------------------
+//
+// this is an implementation of the "list" data structure.
+//
+// ----------------------
+
+struct node { // node of the list
     struct node* next;
     struct node* prev; 
     TListValue val;
 };
 
 struct list {
-    struct node* head;
-    struct node* tail;                                              
-    struct node* fact_tail;
+    struct node* head; // ptr to head
+    struct node* tail; // ptr to tail                                         
+    struct node* fact_tail; // ptr to last not empty element of list ( if list is full -> tail = fact_tail )
     size_t size;
-    int is_empty;
+    int is_empty; // list emptiness indicator
 };
 
-const int LISTGARBAGE = -1;
+TListValue LISTGARBAGE = NULL;
 
 TList* create_list (size_t number_of_elements){
     TList* list = (TList*) calloc(1, sizeof(TList));
@@ -108,39 +115,14 @@ void list_clean(TList* list) {
     list->is_empty = 1;
 }
 
-void list_move_to_head(TList* list, TNode* new_head) {
-    if (new_head == NULL) {
-        return;
-    }
-    
-    if (new_head == list->head) {
-        return;
-    }
-    
-    if (new_head == list->tail) {
-        list->head = new_head;
-        list->tail = new_head->prev;
-        return;
-    }
-
-    if (new_head == list->fact_tail)
-        list->fact_tail = new_head->prev;
-
-    new_head->prev->next = new_head->next;
-    new_head->next->prev = new_head->prev;
-
-    new_head->next = list->head;
-    new_head->prev = list->tail;
-
-    list->head->prev = new_head;
-    list->tail->next = new_head;
-
-    list->head = new_head;
-}
-
 void list_delete_node(TList* list, TNode* node) {
+    if (list->is_empty) {
+        return;
+    }
+
     if (list->fact_tail == node && list->head == node) {
         list->is_empty = 1;
+        list->fact_tail = list->tail;
         return;
     }
 
@@ -163,8 +145,6 @@ void list_delete_node(TList* list, TNode* node) {
 
     list->fact_tail->next->prev = node;
     list->fact_tail->next = node;
-
-    list->fact_tail->next = node;
 }
 
 #ifdef CACHE_DEBUGON
@@ -186,3 +166,11 @@ void list_delete_node(TList* list, TNode* node) {
         printf("NULL\n");
     }
 #endif
+
+void list_verificator (TList* list) {
+    TNode* node = list->head;
+    for (int i = 0; i < list->size; ++i) {
+        node = node->next;
+    }
+    assert(node == list->head);
+}
