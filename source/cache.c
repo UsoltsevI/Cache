@@ -45,7 +45,19 @@ struct history {
 static const size_t MINUS_INF = 0;
 
 int compare_hist_itr(void* first, void* second) {
-    return *((size_t*) first) -  *((size_t*) second);
+    // printf("compare result: %d\n", *((size_t*) first) -  *((size_t*) second));
+    size_t* f = (size_t*) first;
+    size_t* s = (size_t*) second;
+
+    if (*f < *s) {
+        return -1;
+        
+    } else if (*f > *s) {
+        return 1;
+    }
+
+    return 0;
+    // return *((size_t*) first) -  *((size_t*) second);
 }
 
 TCache* create_cache(size_t size, size_t k) {
@@ -96,7 +108,7 @@ int cache_update(TCache* cch
     printf("\033[96m verify in cache:\n");
     list_verificator(cch->list);
     printf("verifyed \033[97m \n");
-    if (cch->iteration == 15) {
+    if (cch->iteration > 2) {
         draw_tree(cch->tree);
     }
     // assert(cch->iteration != 15);
@@ -137,6 +149,7 @@ int cache_update(TCache* cch
         #endif
 
             rbtree_delete(cch->tree, hst->last_itr, &compare_hist_itr);
+
 
             queue_add_to_head(hst->queue, cch->iteration);
 
@@ -215,7 +228,7 @@ int cache_update(TCache* cch
         #endif
 
             hst = tree_delete_min(cch->tree, &compare_hist_itr);
-            printf("\033[93m min form three: key: %d last_itr: %lu \033[97m\n", hst->key, hst->last_itr);
+            // printf("\033[93m min form three: key: %d last_itr: %lu \033[97m\n", hst->key, hst->last_itr);
 
             assert(hst->node == NULL);
             assert(hst->last_itr != MINUS_INF);
@@ -317,5 +330,9 @@ void delete_cache(TCache* cch) {
 #ifdef CACHE_DEBUGON
     TCacheKey hist_get_key(THist* hist) {
         return hist->key;
+    }
+
+    size_t hist_get_last_itr(THist* hist) {
+        return hist->last_itr;
     }
 #endif

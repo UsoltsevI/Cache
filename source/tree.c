@@ -36,6 +36,8 @@ static node grandparent (node n);
 static node sibling (node n);
 static node uncle (node n);
 
+// #define TREE_DEBUGON
+
 #ifdef TREE_DEBUGON
 static void verify_properties (rbtree t);
 static void property_1 (node root);
@@ -224,8 +226,10 @@ node lookup_node (rbtree t, size_t key, compare_func compare) {
 }
 
 void check_node (node t, size_t key, compare_func compare, int* res) {
-    if (compare(&t->key, &key) == 0)
+    if (compare(&t->key, &key) == 0) {
         *res = 1;
+        printf("\n\n\n\nслово\n\n\n\n\n");
+    }
     
     if (t->left != NULL) {
         check_node(t->left, key, compare, res);
@@ -284,11 +288,14 @@ void replace_node (rbtree t, node oldn, node newn) {
 }
 
 void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare) {
+    // printf("\n\n\n\ninstrt\n");
     
-    int check = 0;
-    check_node(t->root, key, compare, &check);
-    if (check)
-        return;
+    // int check = 0;
+    // if (t->root != NULL) {
+    //     check_node(t->root, key, compare, &check);
+    // }
+    // if (check)
+    //     return;
 
     node inserted_node = new_node(key, data, RED, NULL, NULL);
 
@@ -299,7 +306,9 @@ void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compar
         node n = t->root;
 
         while (1) {
+            // printf("compare key = %d, n->key = %d\n", key, n->key);
             int comp_result = compare(&key, &n->key);
+            // printf("compare result in tree: %d\n", comp_result);
 
             if (comp_result == 0) {
                 free (inserted_node);
@@ -403,7 +412,8 @@ void rbtree_delete (rbtree t, size_t key, compare_func compare) {
 
     if (n->left != NULL && n->right != NULL) {
         node pred = maximum_node(n->left);
-        n->key   = pred->key;
+        n->key  = pred->key;
+        n->data = pred->data;
         n = pred;
     }
 
@@ -565,7 +575,11 @@ void rbtree_clean_ (node t) {
 
 #ifdef CACHE_DEBUGON
     void draw_tree (rbtree tree) {
-        FILE* save = fopen("drawTree.txt", "wb");
+        static int number = 0;
+        ++number;
+        char* file = calloc(20, sizeof(char));
+        sprintf(file, "drawTree%d.txt", number);
+        FILE* save = fopen(file, "wb");
 
         fprintf(save, "digraph Tree {\n");
 
@@ -577,19 +591,30 @@ void rbtree_clean_ (node t) {
 
         fclose(save);
 
-        system("iconv -f WINDOWS-1251 -t UTF-8 drawTree.txt > buffer.txt");
-        system("dot buffer.txt -Tpng -o drawTree.png");
-        system("start drawTree.png");
+        // system("iconv -f WINDOWS-1251 -t UTF-8 drawTree.txt > buffer.txt");
+        char* str = calloc(100, sizeof(char));
+        sprintf(str, "dot drawTree%d.txt -Tpng -o drawTree%d.png", number, number);
+
+        system(str);
+        
+        char* str1 = calloc(100, sizeof(char));
+        sprintf(str1, "drawTree%d.png", number);
+
+        system(str1);
+
+        free(str);
+        free(str1);
+        free(file);
     }
 
     void draw_tree_1 (FILE* save, node tree, int* node_num) {
         tree->num_in_tree = *node_num;
 
         if (tree->color == BLACK) {
-            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = black, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_key(tree->data), '"');
+            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = white, label = %c | DATA: %u | PAGE: %lu | LAST_ITR = %lu %c];\n", *node_num, '"', tree->key, hist_get_key(tree->data), hist_get_last_itr(tree->data), '"');
         }
         else if (tree->color == RED) {
-            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = red, label = %c | DATA: %u%c];\n", *node_num, '"', hist_get_key(tree->data), '"');
+            fprintf(save, "    %d [shape = Mrecord, style = filled, fillcolor = red, label = %c | DATA: %u | PAGE: %lu | LAST_ITR = %lu %c];\n", *node_num, '"',  tree->key, hist_get_key(tree->data), hist_get_last_itr(tree->data), '"');
         }
 
         if (tree->left != NULL) {

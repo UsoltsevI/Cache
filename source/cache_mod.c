@@ -132,9 +132,9 @@ void delete_cache(TCache* cch) {
 #ifdef CACHE_DEBUGON
     void hist_dump(THist* hist) {
         printf("hist->page = %lu\n", hist->page);
-        printf("hist->time = %lu\n", hist->time);
-        printf("hist->list = %p \n", hist->list);
-        list_dump(hist->list);
+        printf("hist->time = %lu\n", hist->itr);
+        printf("hist->list = %p \n", hist->queue);
+        list_dump(hist->queue);
     }
 
     void cache_dump(TCache* cch) {
@@ -152,7 +152,7 @@ void delete_cache(TCache* cch) {
         printf("\n\n");
     }
 
-    TCacheTime hist_get_time(THist* hist) {
-        return hist->time;
+    size_t hist_get_key(THist* hist) {
+        return hist->itr;
     }
 #endif

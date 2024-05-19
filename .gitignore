@@ -1,4 +1,8 @@
 example.csv
 build
 .vscode
+*.txt
+*.png
+*.csv
+*.out
 .gitignore
