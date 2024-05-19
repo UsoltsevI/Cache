@@ -175,8 +175,6 @@ void list_delete_node(TList* list, TNode* node) {
 
     list->fact_tail->next->prev = node;
     list->fact_tail->next = node;
-
-    list->fact_tail->next = node;
 }
 
 #ifdef CACHE_DEBUGON
