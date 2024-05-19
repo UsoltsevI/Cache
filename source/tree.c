@@ -270,6 +270,10 @@ void replace_node (rbtree t, node oldn, node newn) {
 }
 
 void rbtree_insert (rbtree t, size_t key, TTreeContent data, compare_func compare) {
+    if (lookup_node(t, key, compare) != NULL) {
+        return;
+    }
+
     node inserted_node = new_node(key, data, RED, NULL, NULL);
 
     if (t->root == NULL) {
