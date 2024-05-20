@@ -1,3 +1,11 @@
+//--------------------------------------------------------------------------------------------------
+//
+// Hash table implementation using the split chain method
+// Key of value is value % table_size
+// Size of accumulating_list = table_size
+//
+//--------------------------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
