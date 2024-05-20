@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------------------
 //
-// Input: parameters of LRU-K and array of page numbers
-// Output: array of 1(hit) and 0(miss)
+// Input: parameters of LRU-K and array of page numbers in file test.dat from cache
+// Output: array of 1(hit) and 0(miss) generating in file test.ans in cache
 //
 // Use a primitive implementation of lru-k algorithm with arrays instead of a list and hash
 //
@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+
+
 
 struct test_hist {
   int head;
@@ -23,6 +25,8 @@ struct test_hist {
 ;
 
 int main() {
+  FILE *datfrom=fopen("test.dat","r");
+  FILE *datto=fopen("test.ans","w");
   int k,
   m,
   n,
@@ -42,7 +46,7 @@ int main() {
   }
 
   for (int i=0; i<n; i++) {
-    scanf("%d", &page);
+    fscanf(datfrom,"%d", &page);
 
     int delset=1;
 
@@ -137,13 +141,13 @@ int main() {
         cache[todel].dat[j]=0;
       }
 
-      printf("0 ");
+      fprintf(datto,"0 ");
 
 
     }
 
     else {
-      printf("1 ");
+      fprintf(datto,"1 ");
     }
   }
 
