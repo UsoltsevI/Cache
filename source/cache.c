@@ -70,14 +70,16 @@ TCache* create_cache(size_t size, size_t k) {
     return cch;
 }
 
-void print_cache_opened_pages(TCache* cch) {
-    printf("OPENED PAGES: ");
-    for (size_t i = 0; i < cch->cur_hst; i++) {
-        printf("%ld ", cch->histories[i].key);
-    }
+#ifdef CACHE_DEBUGON
+    void print_cache_opened_pages(TCache* cch) {
+        printf("OPENED PAGES: ");
+        for (size_t i = 0; i < cch->cur_hst; i++) {
+            printf("%ld ", cch->histories[i].key);
+        }
 
-    printf("\n");
-}
+        printf("\n");
+    }
+#endif
 
 int cache_update(TCache* cch
             , int key

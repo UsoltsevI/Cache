@@ -53,7 +53,11 @@ The library for cache_mod will be located there and called `liblrukmod`.
 The library for a regular LRU will be called `liblrulib` and will be located in the build/problem_lc folder.
 
 ## Test results
-The section will be finalized later...
+We tested our program using `test_cache` to check for correctness. The input is provided with the name of the data file and the name of the file with the answers. The file with the answers is generated in advance by the `test_generator` program. The test data is stored in [/tests/resources](/tests/resources). Example of using test_cache: `./build/test_cache.x ./tests/resourses/test5.dat ./tests/resourses/test5.ans`.
+
+To compare with the usual LRU and for different K, we used cache_compare, which returned a CSV file, which we then processed. The test results are stored in [/tests/results](/tests/results)
+
+Based on the results of our testing, we found out that the most optimal K depends on the input data. At the same time, the usual LRU wins both in time and in hits in most cases.
 
 ## Useful links
 * [Cache replacement policies](https://en.wikipedia.org/wiki/Cache_replacement_policies)
