@@ -1,5 +1,7 @@
 # Cache project
 
+See our presentation: [/documents/cacheLRU-K.pdf](/documents/cacheLRU-k.pdf)
+
 ## Description
 
 ### Common
