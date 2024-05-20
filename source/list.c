@@ -1,14 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-
-#include "../include/list.h"
-
 // ----------------------
 //
 // this is an implementation of the "list" data structure.
 //
 // ----------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include "../include/list.h"
 
 struct node { // node of the list
     struct node* next;

@@ -1,7 +1,3 @@
-#ifndef LIST_H
-#define LIST_H
-#include <stddef.h>
-#include "cache.h"
 
 //------------------------------------------------------------------------------
 //
@@ -13,6 +9,12 @@
 // of the List data struct
 //
 //------------------------------------------------------------------------------
+
+
+#ifndef LIST_H
+#define LIST_H
+#include <stddef.h>
+#include "cache.h"
 
 typedef THist* TListValue;
 

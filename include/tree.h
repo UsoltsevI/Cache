@@ -1,7 +1,3 @@
-#ifndef TREE_H
-#define TREE_H
-
-#include "cache.h"
 
 //------------------------------------------------------------------------------
 //
@@ -13,6 +9,11 @@
 // of the red-black binary tree
 //
 //------------------------------------------------------------------------------
+
+#ifndef TREE_H
+#define TREE_H
+
+#include "cache.h"
 
 typedef THist* TTreeContent;
 

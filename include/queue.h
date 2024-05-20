@@ -1,8 +1,3 @@
-#ifndef QUEUE_H
-#define QUEUE_N
-
-#include <stddef.h>
-#include "cache.h"
 
 //------------------------------------------------------------------------------
 //
@@ -14,6 +9,12 @@
 // of the Queue data struct
 //
 //------------------------------------------------------------------------------
+
+#ifndef QUEUE_H
+#define QUEUE_N
+
+#include <stddef.h>
+#include "cache.h"
 
 typedef size_t TQueueValue;
 

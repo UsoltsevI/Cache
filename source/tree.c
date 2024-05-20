@@ -1,9 +1,3 @@
-#include "../include/tree.h"
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
 // ----------------------------------------
 //
 // The implementation of red-black tree
@@ -16,6 +10,12 @@
 // 5. All paths from any given node to its leaf nodes contain ithe same number of black node.
 //
 // ----------------------------------------
+
+#include "../include/tree.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 struct rbtree_node_t {
     size_t key;
