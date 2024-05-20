@@ -56,7 +56,7 @@ TCache* create_cache(size_t size, size_t k) {
 
     cch->table = create_table(cch->size);
     cch->tree  = rbtree_create(cch->size);
-    cch->list  = create_list(cch->size + 1);
+    cch->list  = create_list(cch->size);
 
     cch->histories = (THist*) calloc(cch->size, sizeof(THist));
 
